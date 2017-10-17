@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1446667744 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1508104954 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\compilador\analex.c
+
+1508098614 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
