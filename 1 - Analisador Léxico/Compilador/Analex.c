@@ -181,10 +181,18 @@ TOKEN * analex(FILE * fd)
                 {
                     estado = 51;
                     continue;
-                }/*=====FIM SINAIS=====*/       
+                }/*=====FIM SINAIS=====*/ 
+                else if( (estado == 0) && (!(EH_ESPACO(c)) ││ !(c=='\t')) )
+                 {
+                     printf("ERRO 0: Caractere '%c' não era esperado na linha %d coluna %d!", c, linha, coluna);
+                     exit(1);  
+                 }
 
                 break;
             case 1:
+
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '\\')
                 {
@@ -200,6 +208,9 @@ TOKEN * analex(FILE * fd)
                 break;
             case 2:
 
+                c = fgetc(fd);
+                coluna++;
+
                 if(c == '\'')
                 {
                     estado = 6;
@@ -208,6 +219,9 @@ TOKEN * analex(FILE * fd)
 
                 break;
             case 3:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == 'n')
                 {
@@ -227,6 +241,9 @@ TOKEN * analex(FILE * fd)
 
                 break;
             case 4:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '\'')
                 {
@@ -236,6 +253,9 @@ TOKEN * analex(FILE * fd)
                 
                 break;
             case 5:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '\'')
                 {
@@ -249,8 +269,6 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     CARACCON
                 */
-
-                //O QUE FAZER?
                 
                 break;
             case 7:
@@ -273,6 +291,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     APÓSTROFO
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -282,11 +303,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     BARRA INVERTIDA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 10:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == 'ch') //Quem será ch?
                 {
@@ -296,6 +323,9 @@ TOKEN * analex(FILE * fd)
                 
                 break;
             case 11:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == 'ch') //Quem será ch?
                 {
@@ -319,11 +349,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     CADEIACON
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 13:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '\"')
                 {
@@ -338,6 +374,9 @@ TOKEN * analex(FILE * fd)
                 
                 break;
             case 14:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '\"')
                 {
@@ -347,6 +386,9 @@ TOKEN * analex(FILE * fd)
                 
                 break;
             case 15:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '\"')
                 {
@@ -360,6 +402,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     ASPAS DUPLAS
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -369,11 +414,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     NEW LINE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 18:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(EH_DIGITO(c))
                 {
@@ -398,11 +449,21 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     INTCON
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
-                //O QUE FAZER?
+                t->cat = INTEIRO;
+                t->lexema[j++] = c;
+                t->valorInteiro = atoi(t->lexema);
+                
+                return t;
                 
                 break;
             case 20:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(EH_DIGITO(c))
                 {
@@ -411,7 +472,10 @@ TOKEN * analex(FILE * fd)
                 }
                 
                 break;
-            case 21:                
+            case 21:  
+            
+                c = fgetc(fd);
+                coluna++;              
 
                 if(EH_DIGITO(c))
                 {
@@ -431,11 +495,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     REALCON
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 23:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(EH_ALFA(c))
                 {
@@ -456,7 +526,15 @@ TOKEN * analex(FILE * fd)
                     ID
                 */
 
-                //O QUE FAZER?
+                c = fgetc(fd);
+                coluna++;
+                
+                t->cat = ID;
+                t->lexema[j++] = c;
+                t->CodigoPr = EH_PALAVRA_RESERVADA(c);
+                A_IGUAL_A_B(t->lexema, TAB_PR[EH_PALAVRA_RESERVADA(c)]);
+                         
+                return token;
                 
                 break;
             case 25:
@@ -464,8 +542,15 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     PONTO E VÍGULA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
-                //O QUE FAZER?
+                t->cat = SINAL;
+                t->lexema[0] = ';';
+                t->lexema[1] = '\0';
+                t->CodSinal = DIVIDE;                  
+                return t;
                 
                 break;
             case 26:
@@ -473,6 +558,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     SUBTRAI
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -482,6 +570,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     SOMA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -491,6 +582,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     ABRE CHAVE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -500,6 +594,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     FECHA CHAVE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -509,6 +606,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     ABRE PARENTESE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -518,6 +618,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     FECHA PARENTESE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -527,6 +630,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     MULTIPLICA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -536,11 +642,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     VÍRGULA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 34:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '│')
                 {
@@ -554,11 +666,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     OU LÓGICO
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 36:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '&')
                 {
@@ -572,11 +690,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     E LÓGICO
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 38:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '=')
                 {
@@ -596,6 +720,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     IGUALA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -605,11 +732,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     ATRIBUI
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 41:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '=')
                 {
@@ -629,6 +762,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     DIFERENTE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -638,11 +774,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     NEGA
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 44:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '=')
                 {
@@ -662,6 +804,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     MAIOR OU IGUAL
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -671,11 +816,17 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     MAIOR QUE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
                 break;
             case 47:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '=')
                 {
@@ -695,6 +846,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     MENOR OU IGUAL
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -704,6 +858,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     MAIOR QUE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
                 
@@ -715,9 +872,15 @@ TOKEN * analex(FILE * fd)
                     estado = 6;
                     continue;
                 }
+            
+                c = fgetc(fd);
+                coluna++;
                 
                 break;
             case 51:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(c == '*')
                 {
@@ -737,11 +900,20 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     DIVIDE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
-                //O QUE FAZER?
+                t->cat = SINAL;
+                t->lexema[j++] = '/';
+                t->CodSinal = DIVIDE;                  
+                return t;
                 
                 break;
             case 53:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(EH_LETRA(c) ││ EH_DIGITO(c))
                 {
@@ -751,6 +923,9 @@ TOKEN * analex(FILE * fd)
                 
                 break;
             case 54:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(EH_LETRA(c) ││ EH_DIGITO(c))
                 {
@@ -765,6 +940,9 @@ TOKEN * analex(FILE * fd)
                 
                 break;
             case 55:
+            
+                c = fgetc(fd);
+                coluna++;
 
                 if(EH_LETRA(c) ││ EH_DIGITO(c))
                 {
@@ -788,6 +966,9 @@ TOKEN * analex(FILE * fd)
                     ESTADO DE ACEITAÇÃO
                     DIVIDE
                 */
+            
+                c = fgetc(fd);
+                coluna++;
 
                 //O QUE FAZER?
 
