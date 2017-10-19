@@ -61,145 +61,46 @@ TOKEN * analex(FILE * fd)
         switch(estado)
         {
             case 0:
-
-                if(EH_ESPACO(c))
-                {
-                    //espaço é ' ', \n
-                    estado = 0;
-                    c = fgetc(fd);
-                    coluna++;
-                    continue;
-                }
-                if(c == '\t')
-                {
-                    estado = 0;
-                    c = fgetc(fd);
-                    linha++;
-                    continue;
-                }
-                else if(EH_DIGITO(c))
-                {
-                    estado = 18;
-                    continue;
-                }
-                else if(EH_LETRA(c))
-                {
-                    estado = 23;
-                    continue;
-                }
-                else if(EH_LETRA(c))
-                {
-                    estado = 23;
-                    continue;
-                }/*=====INÍCIO SINAIS=====*/
-                else if(c == '\'')
-                {
-                    estado = 1;
-                    continue;
-                }
-                else if(c == '\"')
-                {
-                    estado = 10;
-                    continue;
-                }
-                else if(c == ';')
-                {
-                    estado = 25;
-                    continue;
-                }
-                else if(c == '-')
-                {
-                    estado = 26;
-                    continue;
-                }
-                else if(c == '+')
-                {
-                    estado = 27;
-                    continue;
-                }
-                else if(c == '{')
-                {
-                    estado = 28;
-                    continue;
-                }
-                else if(c == '}')
-                {
-                    estado = 29;
-                    continue;
-                }
-                else if(c == '(')
-                {
-                    estado = 30;
-                    continue;
-                }
-                else if(c == ')')
-                {
-                    estado = 31;
-                    continue;
-                }
-                else if(c == '*')
-                {
-                    estado = 32;
-                    continue;
-                }
-                else if(c == ',')
-                {
-                    estado = 33;
-                    continue;
-                }
-                else if(c == '│')
-                {
-                    estado = 33;
-                    continue;
-                }
-                else if(c == '&')
-                {
-                    estado = 36;
-                    continue;
-                }
-                else if(c == '=')
-                {
-                    estado = 38;
-                    continue;
-                }
-                else if(c == '!')
-                {
-                    estado = 41;
-                    continue;
-                }
-                else if(c == '>')
-                {
-                    estado = 44;
-                    continue;
-                }
-                else if(c == '<')
-                {
-                    estado = 47;
-                    continue;
-                }
-                else if(c == '/')
-                {
-                    estado = 51;
-                    continue;
-                }/*=====FIM SINAIS=====*/ 
+                //espaço é ' ', \n
+                if(EH_ESPACO(c)) {estado = 0; c = fgetc(fd); coluna++; continue; }
+                else if(c == '\t') {estado = 0; c = fgetc(fd); linha++; continue; } 
+                else if(EH_DIGITO(c)) {estado = 20; continue; } 
+                else if(EH_LETRA(c)) {estado = 25; continue; }
+                /*=====INÍCIO SINAIS=====*/ 
+                else if(c == '/') {estado = 1; continue; }
+                else if(c == '\'') {estado = 6; continue; } 
+                else if(c == '\"') {estado = 17; continue; } 
+                else if(c == ';') {estado = 27; continue; } 
+                else if(c == '-') {estado = 28; continue; } 
+                else if(c == '+') {estado = 29; continue; } 
+                else if(c == '{') {estado = 30; continue; } 
+                else if(c == '}') {estado = 31; continue; } 
+                else if(c == '(') {estado = 32; continue; } 
+                else if(c == ')') {estado = 33; continue; } 
+                else if(c == '*') {estado = 34; continue; } 
+                else if(c == ',') {estado = 35; continue; } 
+                else if(c == '│') {estado = 36; continue; } 
+                else if(c == '&') {estado = 38; continue; } 
+                else if(c == '=') {estado = 40; continue; } 
+                else if(c == '!') {estado = 43; continue; } 
+                else if(c == '>') {estado = 46; continue; } 
+                else if(c == '<') {estado = 49; continue; } 
+                /*=====FIM SINAIS=====*/ 
                 else if( (estado == 0) && (!(EH_ESPACO(c)) ││ !(c=='\t')) )
-                 {
+                {
                      printf("ERRO 0: Caractere '%c' não era esperado na linha %d coluna %d!", c, linha, coluna);
                      exit(1);  
-                 }
+                }
 
                 break;
             case 1:
 
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '\\')
+                if(c == '*')
                 {
                     estado = 3;
                     continue;
                 }
-                else if(c == 'ch') //Quem será ch?
+                else
                 {
                     estado = 2;
                     continue;
@@ -207,771 +108,329 @@ TOKEN * analex(FILE * fd)
 
                 break;
             case 2:
-
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '\'')
-                {
-                    estado = 6;
-                    continue;
-                }
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    DIVIDE
+                */
 
                 break;
             case 3:
-            
-                c = fgetc(fd);
-                coluna++;
 
-                if(c == 'n')
+                if(c == QUALQUER_COISA)
                 {
                     estado = 4;
                     continue;
                 }
-                else if(c == '0')
-                {
-                    estado = 5;
-                    continue;
-                }
-                else if(c == '\'')
-                {
-                    estado = 7;
-                    continue;
-                }
+
 
                 break;
             case 4:
-            
-                c = fgetc(fd);
-                coluna++;
 
-                if(c == '\'')
+                if(c == QUALQUER_COISA)
                 {
-                    estado = 6;
+                    estado = 4;
+                    continue;
+                }
+                else if(c == '*')
+                {
+                    estado = 5;
                     continue;
                 }
                 
                 break;
             case 5:
-            
-                c = fgetc(fd);
-                coluna++;
 
-                if(c == '\'')
+                if(c == QUALQUER_COISA)
                 {
-                    estado = 6;
+                    estado = 4;
                     continue;
                 }
-                
+                else if(c == '/')
+                {
+                    estado = 0;
+                    continue;
+                }
+            
                 break;
             case 6:
+
+                if(isprint(c) && c != '\\' && c != '\'')
+                {
+                    estado = 7;
+                    continue;
+                }
+                else if(c == '/')
+                {
+                    estado = 8;
+                    continue;
+                }
+
+                break;
+            case 7:
+
+                break;
+            case 8:
+
+                break;
+            case 9:
                 /*
                     ESTADO DE ACEITAÇÃO
                     CARACCON
                 */
                 
                 break;
-            case 7:
-
-                if(c == '\'')
-                {
-                    estado = 8;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 9;
-                    continue;
-                }
+            case 10:
+            
+                break;
+            case 11:
+            
+                break;
+            case 12:
                 
                 break;
-            case 8:
+            case 13:
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    CARACCON
+                */
+            
+                break;
+            case 14:
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    CARACCON
+                */
+            
+                break;
+            case 15:
                 /*
                     ESTADO DE ACEITAÇÃO
                     APÓSTROFO
                 */
             
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-                
-                break;
-            case 9:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    BARRA INVERTIDA
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-                
-                break;
-            case 10:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == 'ch') //Quem será ch?
-                {
-                    estado = 11;
-                    continue;
-                }
-                
-                break;
-            case 11:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == 'ch') //Quem será ch?
-                {
-                    estado = 11;
-                    continue;
-                }
-                else if(c == '\"')
-                {
-                    estado = 12;
-                    continue;
-                }
-                else if(c == '/')
-                {
-                    estado = 13;
-                    continue;
-                }
-                
-                break;
-            case 12:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    CADEIACON
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-                
-                break;
-            case 13:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '\"')
-                {
-                    estado = 14;
-                    continue;
-                }
-                else if(c == 'n')
-                {
-                    estado = 15;
-                    continue;
-                }
-                
-                break;
-            case 14:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '\"')
-                {
-                    estado = 16;
-                    continue;
-                }
-                
-                break;
-            case 15:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '\"')
-                {
-                    estado = 17;
-                    continue;
-                }
-                
                 break;
             case 16:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    ASPAS DUPLAS
+                    BARRA INVERTIDA
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 17:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    NEW LINE
-                */
-            
-                c = fgetc(fd);
-                coluna++;
 
-                //O QUE FAZER?
+                if(isprint(c) && c != '\"' && c != '\n')
+                {
+                    estado = 7;
+                    continue;
+                }
+                else if(c == '/')
+                {
+                    estado = 8;
+                    continue;
+                }
+            
                 
                 break;
             case 18:
             
-                c = fgetc(fd);
-                coluna++;
-
-                if(EH_DIGITO(c))
-                {
-                    estado = 18;
-                    continue;
-                }
-                else if('.')
-                {
-                    estado = 20;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 19;
-                    continue;
-                }
-                
                 break;
             case 19:
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    CADEIACON
+                */
+                
+                break;
+            case 20:
+                            
+                break;
+            case 21:
                 /*
                     ESTADO DE ACEITAÇÃO
                     INTCON
                 */
             
-                c = fgetc(fd);
-                coluna++;
-
-                t->cat = INTEIRO;
-                t->lexema[j++] = c;
-                t->valorInteiro = atoi(t->lexema);
-                
-                return t;
-                
-                break;
-            case 20:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(EH_DIGITO(c))
-                {
-                    estado = 21;
-                    continue;
-                }
-                
-                break;
-            case 21:  
-            
-                c = fgetc(fd);
-                coluna++;              
-
-                if(EH_DIGITO(c))
-                {
-                    estado = 21;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 22;
-                    continue;
-                }
-                
                 break;
             case 22:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    REALCON
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 23:
             
-                c = fgetc(fd);
-                coluna++;
-
-                if(EH_ALFA(c))
-                {
-                    estado = 23;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 24;
-                    continue;
-                }
-                
                 break;
             case 24:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    ID
+                    REALCON
                 */
-
-                c = fgetc(fd);
-                coluna++;
-                
-                t->cat = ID;
-                t->lexema[j++] = c;
-                t->CodigoPr = EH_PALAVRA_RESERVADA(c);
-                A_IGUAL_A_B(t->lexema, TAB_PR[EH_PALAVRA_RESERVADA(c)]);
-                         
-                return token;
-                
+               
                 break;
             case 25:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    PONTO E VÍGULA
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                t->cat = SINAL;
-                t->lexema[0] = ';';
-                t->lexema[1] = '\0';
-                t->CodSinal = DIVIDE;                  
-                return t;
                 
                 break;
             case 26:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    SUBTRAI
+                    ID
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 27:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    SOMA
+                    PONTO E VÍRGULA
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 28:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    ABRE CHAVE
+                    SUBTRAI
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 29:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    FECHA CHAVE
+                    SOMA
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 30:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    ABRE PARENTESE
-                */
-            
-                c = fgetc(fd);
-                coluna++;
+                    ABRE CHAVE
+                */             
 
-                //O QUE FAZER?
-                
                 break;
             case 31:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    FECHA PARENTESE
+                    FECHA CHAVE
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
-            case 32:
+            case 32:   
                 /*
                     ESTADO DE ACEITAÇÃO
-                    MULTIPLICA
+                    ABRE PARENTESE
                 */
-            
-                c = fgetc(fd);
-                coluna++;
 
-                //O QUE FAZER?
-                
                 break;
             case 33:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    VÍRGULA
+                    FECHA PARENTESE
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 34:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '│')
-                {
-                    estado = 35;
-                    continue;
-                }
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    MULTIPLICA
+                */
                 
                 break;
             case 35:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    OU LÓGICO
+                    VÍRGULA
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 36:
             
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '&')
-                {
-                    estado = 37;
-                    continue;
-                }
-                
                 break;
             case 37:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    E LÓGICO
+                    OU LÓGICO
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 38:
             
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '=')
-                {
-                    estado = 39;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 40;
-                    continue;
-                }
-                
                 break;
             case 39:
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    E LÓGICO
+                */
+                
+                break;
+            case 40:
+                
+                break;
+            case 41:
                 /*
                     ESTADO DE ACEITAÇÃO
                     IGUALA
                 */
             
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-                
                 break;
-            case 40:
+            case 42:
                 /*
                     ESTADO DE ACEITAÇÃO
                     ATRIBUI
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
-            case 41:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '=')
-                {
-                    estado = 42;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 43;
-                    continue;
-                }
+            case 43:
                 
                 break;
-            case 42:
+            case 44:
                 /*
                     ESTADO DE ACEITAÇÃO
                     DIFERENTE
                 */
             
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-                
-                break;
-            case 43:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    NEGA
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-                
-                break;
-            case 44:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '=')
-                {
-                    estado = 45;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 46;
-                    continue;
-                }
-                
                 break;
             case 45:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    MAIOR OU IGUAL
+                    NEGA
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 46:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    MAIOR QUE
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 47:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '=')
-                {
-                    estado = 48;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 49;
-                    continue;
-                }
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    MAIOR OU IGUAL
+                */
                 
                 break;
             case 48:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    MENOR OU IGUAL
+                    MAIOR QUE
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 49:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    MAIOR QUE
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
                 
                 break;
             case 50:
-
-                if(c == 'EOI') // COMO IDENTIFICAR EOI?
-                {
-                    estado = 6;
-                    continue;
-                }
-            
-                c = fgetc(fd);
-                coluna++;
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    MENOR OU IGUAL
+                */
                 
                 break;
             case 51:
+                /*
+                    ESTADO DE ACEITAÇÃO
+                    MENOR QUE
+                */
             
-                c = fgetc(fd);
-                coluna++;
-
-                if(c == '*')
-                {
-                    estado = 53;
-                    continue;
-                }
-                else
-                {
-                    //outro*
-                    estado = 52;
-                    continue;
-                }
-                
                 break;
             case 52:
                 /*
                     ESTADO DE ACEITAÇÃO
-                    DIVIDE
+                    EOF
                 */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                t->cat = SINAL;
-                t->lexema[j++] = '/';
-                t->CodSinal = DIVIDE;                  
-                return t;
                 
-                break;
-            case 53:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(EH_LETRA(c) ││ EH_DIGITO(c))
-                {
-                    estado = 54;
-                    continue;
-                }
-                
-                break;
-            case 54:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(EH_LETRA(c) ││ EH_DIGITO(c))
-                {
-                    estado = 54;
-                    continue;
-                }
-                else if(c == '*')
-                {
-                    estado = 55;
-                    continue;
-                }
-                
-                break;
-            case 55:
-            
-                c = fgetc(fd);
-                coluna++;
-
-                if(EH_LETRA(c) ││ EH_DIGITO(c))
-                {
-                    estado = 54;
-                    continue;
-                }
-                else if(c == '*')
-                {
-                    estado = 55;
-                    continue;
-                }
-                else if(c == '/')
-                {
-                    estado = 56;
-                    continue;
-                }
-
-                break;
-            case 56:
-                /*
-                    ESTADO DE ACEITAÇÃO
-                    DIVIDE
-                */
-            
-                c = fgetc(fd);
-                coluna++;
-
-                //O QUE FAZER?
-
                 break;
         }
     }
