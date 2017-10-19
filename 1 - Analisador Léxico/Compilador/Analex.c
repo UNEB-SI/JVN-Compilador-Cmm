@@ -9,7 +9,7 @@ int cont_literal=-1;
 int EH_PALAVRA_RESERVADA(char palavra[]){
     int i;  
     
-    for(i=0;i<30;i++){
+    for(i=0;i<11;i++){
         if (!strcmp(palavra,TAB_PR[i]))
         { 
             return i;
@@ -21,7 +21,7 @@ int EH_PALAVRA_RESERVADA(char palavra[]){
 int EH_SINAL(char palavra[]){
     int i;  
     
-    for(i=0;i<30;i++){
+    for(i=0;i<21;i++){
         if (!strcmp(palavra,TAB_SN[i]))
         { 
             return i;
@@ -32,7 +32,7 @@ int EH_SINAL(char palavra[]){
 }
 #define EH_LETRA(x)((x>='a')&&(x<='z'))||((x>='A')&&(x<='Z'))
 #define EH_DIGITO(x)(x>='0')&&(x<='9')
-#define EH_ESPACO(x)(x==' ')||(x=='\r')||(x=='\n')||(x=='\t')
+#define EH_ESPACO(x)(x==' ')||(x=='\n')
 #define EH_ALFA(x)EH_LETRA(x)||EH_DIGITO(x)||(x=='_')
 #define A_IGUAL_A_B(A,B) (strcmp((char *)A,(char *)B) == 0)
 
@@ -61,19 +61,144 @@ TOKEN * analex(FILE * fd)
         switch(estado)
         {
             case 0:
+
                 if(EH_ESPACO(c))
                 {
+                    //espa√ßo √© ' ', \n
                     estado = 0;
                     c = fgetc(fd);
                     coluna++;
                     continue;
                 }
-
-                if(c == '/')
+                if(c == '\t')
+                {
+                    estado = 0;
+                    c = fgetc(fd);
+                    linha++;
+                    continue;
+                }
+                else if(EH_DIGITO(c))
+                {
+                    estado = 18;
+                    continue;
+                }
+                else if(EH_LETRA(c))
+                {
+                    estado = 23;
+                    continue;
+                }
+                else if(EH_LETRA(c))
+                {
+                    estado = 23;
+                    continue;
+                }/*=====IN√çCIO SINAIS=====*/
+                else if(c == '\'')
                 {
                     estado = 1;
                     continue;
                 }
+                else if(c == '\"')
+                {
+                    estado = 10;
+                    continue;
+                }
+                else if(c == ';')
+                {
+                    estado = 25;
+                    continue;
+                }
+                else if(c == '-')
+                {
+                    estado = 26;
+                    continue;
+                }
+                else if(c == '+')
+                {
+                    estado = 27;
+                    continue;
+                }
+                else if(c == '{')
+                {
+                    estado = 28;
+                    continue;
+                }
+                else if(c == '}')
+                {
+                    estado = 29;
+                    continue;
+                }
+                else if(c == '(')
+                {
+                    estado = 30;
+                    continue;
+                }
+                else if(c == ')')
+                {
+                    estado = 31;
+                    continue;
+                }
+                else if(c == '*')
+                {
+                    estado = 32;
+                    continue;
+                }
+                else if(c == ',')
+                {
+                    estado = 33;
+                    continue;
+                }
+                else if(c == '‚îÇ')
+                {
+                    estado = 33;
+                    continue;
+                }
+                else if(c == '&')
+                {
+                    estado = 36;
+                    continue;
+                }
+                else if(c == '=')
+                {
+                    estado = 38;
+                    continue;
+                }
+                else if(c == '!')
+                {
+                    estado = 41;
+                    continue;
+                }
+                else if(c == '>')
+                {
+                    estado = 44;
+                    continue;
+                }
+                else if(c == '<')
+                {
+                    estado = 47;
+                    continue;
+                }
+                else if(c == '/')
+                {
+                    estado = 51;
+                    continue;
+                }/*=====FIM SINAIS=====*/       
+
+                break;
+            case 1:
+
+                if(c == '\\')
+                {
+                    estado = 3;
+                    continue;
+                }
+                else if(c == 'ch') //Quem ser√° ch?
+                {
+                    estado = 2;
+                    continue;
+                }
+
+                break;
+            case 2:
 
                 if(c == '\'')
                 {
@@ -81,492 +206,592 @@ TOKEN * analex(FILE * fd)
                     continue;
                 }
 
+                break;
+            case 3:
+
+                if(c == 'n')
+                {
+                    estado = 4;
+                    continue;
+                }
+                else if(c == '0')
+                {
+                    estado = 5;
+                    continue;
+                }
+                else if(c == '\'')
+                {
+                    estado = 7;
+                    continue;
+                }
+
+                break;
+            case 4:
+
+                if(c == '\'')
+                {
+                    estado = 6;
+                    continue;
+                }
+                
+                break;
+            case 5:
+
+                if(c == '\'')
+                {
+                    estado = 6;
+                    continue;
+                }
+                
+                break;
+            case 6:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    CARACCON
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 7:
+
+                if(c == '\'')
+                {
+                    estado = 8;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 9;
+                    continue;
+                }
+                
+                break;
+            case 8:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    AP√ìSTROFO
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 9:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    BARRA INVERTIDA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 10:
+
+                if(c == 'ch') //Quem ser√° ch?
+                {
+                    estado = 11;
+                    continue;
+                }
+                
+                break;
+            case 11:
+
+                if(c == 'ch') //Quem ser√° ch?
+                {
+                    estado = 11;
+                    continue;
+                }
+                else if(c == '\"')
+                {
+                    estado = 12;
+                    continue;
+                }
+                else if(c == '/')
+                {
+                    estado = 13;
+                    continue;
+                }
+                
+                break;
+            case 12:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    CADEIACON
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 13:
+
                 if(c == '\"')
+                {
+                    estado = 14;
+                    continue;
+                }
+                else if(c == 'n')
+                {
+                    estado = 15;
+                    continue;
+                }
+                
+                break;
+            case 14:
+
+                if(c == '\"')
+                {
+                    estado = 16;
+                    continue;
+                }
+                
+                break;
+            case 15:
+
+                if(c == '\"')
+                {
+                    estado = 17;
+                    continue;
+                }
+                
+                break;
+            case 16:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    ASPAS DUPLAS
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 17:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    NEW LINE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 18:
+
+                if(EH_DIGITO(c))
+                {
+                    estado = 18;
+                    continue;
+                }
+                else if('.')
+                {
+                    estado = 20;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 19;
+                    continue;
+                }
+                
+                break;
+            case 19:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    INTCON
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 20:
+
+                if(EH_DIGITO(c))
                 {
                     estado = 21;
                     continue;
                 }
+                
+                break;
+            case 21:                
 
                 if(EH_DIGITO(c))
                 {
-                    estado = 14;
+                    estado = 21;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 22;
+                    continue;
+                }
+                
+                break;
+            case 22:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    REALCON
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 23:
+
+                if(EH_ALFA(c))
+                {
+                    estado = 23;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 24;
+                    continue;
+                }
+                
+                break;
+            case 24:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    ID
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 25:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    PONTO E V√çGULA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 26:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    SUBTRAI
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 27:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    SOMA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 28:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    ABRE CHAVE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 29:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    FECHA CHAVE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 30:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    ABRE PARENTESE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 31:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    FECHA PARENTESE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 32:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    MULTIPLICA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 33:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    V√çRGULA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 34:
+
+                if(c == '‚îÇ')
+                {
+                    estado = 35;
+                    continue;
+                }
+                
+                break;
+            case 35:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    OU L√ìGICO
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 36:
+
+                if(c == '&')
+                {
+                    estado = 37;
+                    continue;
+                }
+                
+                break;
+            case 37:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    E L√ìGICO
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 38:
+
+                if(c == '=')
+                {
+                    estado = 39;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 40;
+                    continue;
+                }
+                
+                break;
+            case 39:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    IGUALA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 40:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    ATRIBUI
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 41:
+
+                if(c == '=')
+                {
+                    estado = 42;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 43;
+                    continue;
+                }
+                
+                break;
+            case 42:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    DIFERENTE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 43:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    NEGA
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 44:
+
+                if(c == '=')
+                {
+                    estado = 45;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 46;
+                    continue;
+                }
+                
+                break;
+            case 45:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    MAIOR OU IGUAL
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 46:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    MAIOR QUE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 47:
+
+                if(c == '=')
+                {
+                    estado = 48;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 49;
+                    continue;
+                }
+                
+                break;
+            case 48:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    MENOR OU IGUAL
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 49:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    MAIOR QUE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 50:
+
+                if(c == 'EOI') // COMO IDENTIFICAR EOI?
+                {
+                    estado = 6;
+                    continue;
+                }
+                
+                break;
+            case 51:
+
+                if(c == '*')
+                {
+                    estado = 53;
+                    continue;
+                }
+                else
+                {
+                    //outro*
+                    estado = 52;
+                    continue;
+                }
+                
+                break;
+            case 52:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    DIVIDE
+                */
+
+                //O QUE FAZER?
+                
+                break;
+            case 53:
+
+                if(EH_LETRA(c) ‚îÇ‚îÇ EH_DIGITO(c))
+                {
+                    estado = 54;
+                    continue;
+                }
+                
+                break;
+            case 54:
+
+                if(EH_LETRA(c) ‚îÇ‚îÇ EH_DIGITO(c))
+                {
+                    estado = 54;
+                    continue;
+                }
+                else if(c == '*')
+                {
+                    estado = 55;
+                    continue;
+                }
+                
+                break;
+            case 55:
+
+                if(EH_LETRA(c) ‚îÇ‚îÇ EH_DIGITO(c))
+                {
+                    estado = 54;
+                    continue;
+                }
+                else if(c == '*')
+                {
+                    estado = 55;
+                    continue;
+                }
+                else if(c == '/')
+                {
+                    estado = 56;
                     continue;
                 }
 
-                if(EH_LETRA(c))
-                {
-                   estado = 20;
-                   continue;
-                }
-
-                if(EH_SINAL(c))
-                {
-                    t->tipo = SINAL;
-                    t->codigoSinal = i;  //este codigo È real
-                    t->lexema[0]= c;
-                    t->lexema[1]= '\0';
-
-                    estado = 14;
-                }
-
-             // testa chaves de um unico cacactere
-             for(i = 0; i < SN_SIZE; i++)
-             {
-                  //ja identificou como um sinal.. vai para o estado de aceitaÁ„o..
-                  if(c == TAB_SN[i])
-                  {
-
-                       t->tipo = SINAL;
-                       t->codigoSinal = i;  //este codigo È real
-                       t->lexema[0]= c;
-                       t->lexema[1]= '\0';
-
-                       estado = 14;
-                  }
-             }
-
-             for(i = 0; i < CH_ESP_SIZE; i++)
-             {
-                  if(c == chavesEspeciais[i])
-                  {
-                       t->tipo = SINAL;
-                       t->codigoSinal = i; //este codigo È apenas o indice do sinal, ter· que ser convertido
-                       t->lexema[0]= c;
-                       t->lexema[1]= '\0';
-
-                       estado = 15;
-                  }
-             }
-
-             if(c == '&')
-             {
-                  estado = 17;
-             }
-
-             if(c == '|')
-             {
-                  estado = 19;
-             }
-
-
-             if( (estado == 0) && !(EH_ESPACO(c)) )
-             {
-                 printf("ERRO 0: Caractere '%c' n„o esperado na linha %d coluna 5d!", c, linha, coluna);
-                 exit(1);
-             }
-
-            break;
-            case 1:
-                 //recebeu uma barra, aqui È o estado final de barra tambÈm
-                 //corrigir no automato..
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '*')
-                 {
-                      estado = 2;
-                 }
-                 else
-                 {
-                     //se o proximo n„o for asterisco, este ja È o estado de aceitaÁ„o
-                      t->tipo = SINAL;
-                      t->lexema[0] = '/';
-                      t->lexema[1] = '\0';
-                      t->codigoSinal = DIVIDIDO;
-                      return t;
-                 }
-
-            break;
-            case 2:
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '*')
-                 {
-                      estado = 3;
-                 }
-                 else
-                 {
-                      estado = 2;
-                 }
-
-            break;
-            case 3:
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 //manda para o estado inicial e consome um caracter.
-                 if(c == '/')
-                 {
-                      estado = 0;
-                      c = fgetc(fd);
-
-                 }
-                 else if(c == '*')
-                 {
-                      estado = 3;
-                 }
-                 else
-                 {
-                     estado = 2;
-                 }
-
-            break;
-            case 4:
-
-                 //estado de aceitaÁ„o. ID
-
-                 t->lexema[j++] = c;
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(EH_ALFA(c))
-                 {
-                      estado = 4;
-                 }
-                 else
-                 {
-
-                     //TODO: verificar se È palavra reservada e colocar na tabela de palavras...
-
-                     t->tipo = ID;
-                     //t->lexema[j++] = c; para n„o pegar o char de outro t
-                     t->lexema[j++] = '\0';
-
-
-                     for(i = 0; i < PR_SIZE; i++)
-                     {
-                          if( A_IGUAL_A_B(t->lexema, Tab_PR[i]) )
-                          {
-                                t->tipo = PALAVRA;
-                                t->codigoPR = i;
-                          }
-                     }
-
-
-
-                     return t;
-                 }
-
-            break;
-            case 5: // ACEITA«√O .. INTCON
-
-
-                 t->lexema[j++] = c;
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(EH_NUMERO(c))
-                 {
-                      estado = 5;
-                 }
-                 else if(c == '.')
-                 {
-                      estado = 6;
-                 }
-                 else
-                 {
-
-
-                     t->tipo = INTCON;
-                     t->lexema[j++] = '\0';
-                     t->valorInteiro = atoi(t->lexema);
-                     return t;
-
-                 }
-
-            break;
-            case 6:
-
-                 t->lexema[j++] = c;
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(EH_NUMERO(c))
-                 {
-                     estado = 7;
-                 }
-                 else
-                 {
-                     printf("ERRO 6: Caractere '%c' n„o esperado na linha %d coluna 5d!", c, linha, coluna);
-                     exit(1);
-                 }
-
-            break;
-            case 7: // ACEITA«√O ..
-
-                 if(EH_NUMERO(c))
-                 {
-                      estado = 7;
-                 }
-                 else
-                 {
-
-                     t->tipo = REALCON;
-                     t->lexema[j++] = '\0';
-                     t->valorReal = atof(t->lexema);
-                     return t;
-
-                 }
-
-                 t->lexema[j++] = c;
-                 c = fgetc(fd);
-                 coluna++;
-
-            break;
-
-            case 8:
-
-                 //t->lexema[j++] = c; desprezando as aspas
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '\\')
-                 {
-                     estado = 9;
-                 }
-                 else if(c != '\'')
-                 {
-                     t->lexema[0] = c;
-                     t->lexema[1] = '\0';
-
-                     //novo
-                     t->valorInteiro = c;
-
-                     estado = 10;
-                 }
-                 else
-                 {
-                     printf("ERRO 8: Caractere '%c' n„o esperado na linha %d coluna 5d!", c, linha, coluna);
-                     exit(1);
-                 }
-
-            break;
-            case 9:
-
-                 //t->lexema[j++] = c; // barra
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == 'n')
-                 {
-
-                      t->lexema[0] = '\n';
-                      t->lexema[1] = '\0';
-
-                      //novo
-                      t->valorInteiro = '\n';
-
-                      estado = 10;
-                 }
-                 else if(c == '0')
-                 {
-                      t->lexema[0] = '\0';
-
-                      //novo
-                      t->valorInteiro = '\0';
-
-                      estado = 10;
-                 }
-                 else
-                 {
-                     //TODO: ignorei a barra no char..
-                     t->lexema[0] = c;
-                     t->lexema[1] = '\0';
-                     estado = 10;
-
-                 }
-
-            break;
-            case 10:
-
-                 //verifica que È char. fechamento das aspas;;
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '\'')
-                 {
-                      estado = 11;
-                 }
-                 else
-                 {
-                      printf("ERRO 10: Caractere '%c' n„o esperado na linha %d coluna 5d!", c, linha, coluna);
-                      exit(1);
-                 }
-
-
-            break;
-            case 11:  // ACEITA«√O ..
-
-                 //avanca um char e sai..
-                 c = fgetc(fd);
-                 coluna++;
-                 t->tipo = CHARCON;
-
-                 return t;
-
-            break;
-            case 12:
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c != '"')
-                 {
-                     estado = 12;
-
-                     //armazena somente os 30 primeiros caracteres..
-                     if(j < 30)
-                     {
-                         t->lexema[j++] = c;
-                     }
-
-                     if(k < 200)
-                     {
-                          TAB_LITERAIS[cont_literal][k++] = c;
-                     }
-                 }
-                 else // se == '"'
-                 {
-
-                     estado = 13;
-                     t->lexema[j++] = '\0';
-                 }
-
-            break;
-            case 13:  // ACEITA«√O ..
-
-                 t->tipo = CADEIACON;
-
-                 TAB_LITERAIS[cont_literal][k] = '\0';
-
-                 t->posicaoLiteral = cont_literal;
-
-                 //avanca um char e sai..
-                 c = fgetc(fd);
-                 coluna++;
-
-                 return t;
-
-            break;
-            case 14: // ACEITA«√O ..
-
-                 t->lexema[0] = c;
-                 t->lexema[1] = '\0';
-
-                 //printf("{%c}",c);
-
-
-                 //avanca um char e sai..
-                 c = fgetc(fd);
-                 coluna++;
-
-                 return t;
-
-            break;
-            case 15: // ACEITA«√O ..
-
-                 //avanca um char e tenta sair..
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '=')
-                 {
-                     estado = 16;
-                 }
-                 else
-                 {
-                     //se sinal simples... converter o codigo do sinal especial de acordo com o indice..
-                     t->codigoSinal = sinaisSimples[t->codigoSinal];
-                     return t;
-                 }
-
-            break;
-            case 16: // ACEITA«√O ..
-
-                 t->codigoSinal = sinaisComIgual[t->codigoSinal];
-
-                 // usado para imprimir o lexema..
-                 t->lexema[1]= c;
-                 t->lexema[2]= '\0';
-
-
-                 //avanca um char e sai..
-                 c = fgetc(fd);
-                 coluna++;
-
-                 return t;
-
-            break;
-            case 17:
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '&')
-                 {
-                     estado = 18;
-                 }
-                 else
-                 {
-                      printf("ERRO 17: Caractere '%c' n„o esperado na linha %d coluna 5d!", c, linha, coluna);
-                      exit(1);
-                 }
-
-            break;
-            case 18:  // ACEITA«√O ..
-
-                 t->lexema[0]= '&';
-                 t->lexema[1]= '&';
-                 t->lexema[2]= '\0';
-
-                 t->tipo = SINAL;
-                 t->codigoSinal = ELOGICO;
-
-                 //avanca um char e sai..
-                 c = fgetc(fd);
-                 coluna++;
-
-                 return t;
-
-
-            break;
-            case 19:
-
-                 c = fgetc(fd);
-                 coluna++;
-
-                 if(c == '|')
-                 {
-                     estado = 20;
-                 }
-                 else
-                 {
-                      printf("ERRO 19: Caractere '%c' n„o esperado na linha %d coluna 5d!", c, linha, coluna);
-                      exit(1);
-                 }
-
-            break;
-            case 20:  // ACEITA«√O ..
-
-                 t->lexema[0]= '|';
-                 t->lexema[1]= '|';
-                 t->lexema[2]= '\0';
-
-                 t->tipo = SINAL;
-                 t->codigoSinal = OULOGICO;
-
-                 //avanca um char e sai..
-                 c = fgetc(fd);
-                 coluna++;
-
-                 return t;
-
-            break;
+                break;
+            case 56:
+                /*
+                    ESTADO DE ACEITA√á√ÉO
+                    DIVIDE
+                */
+
+                //O QUE FAZER?
+
+                break;
         }
     }
 

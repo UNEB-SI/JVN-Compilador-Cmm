@@ -5,7 +5,7 @@
 
 #define SN_SIZE 21
 #define PR_SIZE 11
-#define CT_SIZE 8
+#define CT_SIZE 7
 
 /*######### INICIO CATEGORIAS ##########*/
 //ID   - Identificador
@@ -37,7 +37,7 @@ char TAB_PR[PR_SIZE][15] = {"caracter", "inteiro", "real", "booleano", "semparam
 /*######### INICIO TOKEN ##########*/
 typedef struct
 {
-    CATEGORIA tipo;
+    CATEGORIA cat;
     char lexema[31];
 
     union{
