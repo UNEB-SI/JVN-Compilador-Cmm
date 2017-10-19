@@ -1,5 +1,42 @@
 #include "analex.h"
 
+int coluna=1;
+int linha=1;
+
+char TAB_LIT[100][400];
+int cont_literal=-1;
+
+int EH_PALAVRA_RESERVADA(char palavra[]){
+    int i;  
+    
+    for(i=0;i<30;i++){
+        if (!strcmp(palavra,TAB_PR[i]))
+        { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+int EH_SINAL(char palavra[]){
+    int i;  
+    
+    for(i=0;i<30;i++){
+        if (!strcmp(palavra,TAB_SN[i]))
+        { 
+            return i;
+        }
+    }
+
+    return 0;
+}
+#define EH_LETRA(x)((x>='a')&&(x<='z'))||((x>='A')&&(x<='Z'))
+#define EH_DIGITO(x)(x>='0')&&(x<='9')
+#define EH_ESPACO(x)(x==' ')||(x=='\r')||(x=='\n')||(x=='\t')
+#define EH_ALFA(x)EH_LETRA(x)||EH_DIGITO(x)||(x=='_')
+#define A_IGUAL_A_B(A,B) (strcmp((char *)A,(char *)B) == 0)
+
+
 TOKEN * analex(FILE * fd)
 {
     int estado = 0;
@@ -24,50 +61,59 @@ TOKEN * analex(FILE * fd)
         switch(estado)
         {
             case 0:
-             if(EH_ESPACO(c))
-             {
-                   estado = 0;
-                   c = fgetc(fd);
-                   g_coluna++;
+                if(EH_ESPACO(c))
+                {
+                    estado = 0;
+                    c = fgetc(fd);
+                    coluna++;
+                    continue;
+                }
+
+                if(c == '/')
+                {
+                    estado = 1;
+                    continue;
+                }
+
+                if(c == '\'')
+                {
+                    estado = 6;
+                    continue;
+                }
+
+                if(c == '\"')
+                {
+                    estado = 21;
+                    continue;
+                }
+
+                if(EH_DIGITO(c))
+                {
+                    estado = 14;
+                    continue;
+                }
+
+                if(EH_LETRA(c))
+                {
+                   estado = 20;
                    continue;
-             }
+                }
 
-             if(c == '/')
-             {
-                   estado = 1;
-                   continue;
-             }
+                if(EH_SINAL(c))
+                {
+                    t->tipo = SINAL;
+                    t->codigoSinal = i;  //este codigo é real
+                    t->lexema[0]= c;
+                    t->lexema[1]= '\0';
 
-             if(EH_LETRA(c))
-             {
-                   estado = 4;
-                   continue;
-             }
-
-             if(EH_NUMERO(c))
-             {
-                  estado = 5;
-                  continue;
-             }
-
-             if(c == '\'')
-             {
-                  estado = 8;
-                  continue;
-             }
-
-             if(c == '"')
-             {
-                  estado = 12;
-                  g_lit_iterator++;
-                  continue;
-             }
+                    estado = 14;
+                }
 
              // testa chaves de um unico cacactere
-             for(i = 0; i < CH_SIZE; i++)
+             for(i = 0; i < SN_SIZE; i++)
              {
                   //ja identificou como um sinal.. vai para o estado de aceitação..
-                  if(c == chaves[i])
+                  if(c == TAB_SN[i])
                   {
 
                        t->tipo = SINAL;
@@ -105,7 +151,7 @@ TOKEN * analex(FILE * fd)
 
              if( (estado == 0) && !(EH_ESPACO(c)) )
              {
-                 printf("ERRO 0: Caractere '%c' não esperado na linha %d coluna 5d!", c, g_linha, g_coluna);
+                 printf("ERRO 0: Caractere '%c' não esperado na linha %d coluna 5d!", c, linha, coluna);
                  exit(1);
              }
 
@@ -115,7 +161,7 @@ TOKEN * analex(FILE * fd)
                  //corrigir no automato..
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '*')
                  {
@@ -135,7 +181,7 @@ TOKEN * analex(FILE * fd)
             case 2:
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '*')
                  {
@@ -150,7 +196,7 @@ TOKEN * analex(FILE * fd)
             case 3:
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  //manda para o estado inicial e consome um caracter.
                  if(c == '/')
@@ -175,7 +221,7 @@ TOKEN * analex(FILE * fd)
 
                  t->lexema[j++] = c;
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(EH_ALFA(c))
                  {
@@ -211,7 +257,7 @@ TOKEN * analex(FILE * fd)
 
                  t->lexema[j++] = c;
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(EH_NUMERO(c))
                  {
@@ -237,7 +283,7 @@ TOKEN * analex(FILE * fd)
 
                  t->lexema[j++] = c;
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(EH_NUMERO(c))
                  {
@@ -245,7 +291,7 @@ TOKEN * analex(FILE * fd)
                  }
                  else
                  {
-                     printf("ERRO 6: Caractere '%c' não esperado na linha %d coluna 5d!", c, g_linha, g_coluna);
+                     printf("ERRO 6: Caractere '%c' não esperado na linha %d coluna 5d!", c, linha, coluna);
                      exit(1);
                  }
 
@@ -268,7 +314,7 @@ TOKEN * analex(FILE * fd)
 
                  t->lexema[j++] = c;
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
             break;
 
@@ -276,7 +322,7 @@ TOKEN * analex(FILE * fd)
 
                  //t->lexema[j++] = c; desprezando as aspas
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '\\')
                  {
@@ -294,7 +340,7 @@ TOKEN * analex(FILE * fd)
                  }
                  else
                  {
-                     printf("ERRO 8: Caractere '%c' não esperado na linha %d coluna 5d!", c, g_linha, g_coluna);
+                     printf("ERRO 8: Caractere '%c' não esperado na linha %d coluna 5d!", c, linha, coluna);
                      exit(1);
                  }
 
@@ -303,7 +349,7 @@ TOKEN * analex(FILE * fd)
 
                  //t->lexema[j++] = c; // barra
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == 'n')
                  {
@@ -340,7 +386,7 @@ TOKEN * analex(FILE * fd)
                  //verifica que é char. fechamento das aspas;;
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '\'')
                  {
@@ -348,7 +394,7 @@ TOKEN * analex(FILE * fd)
                  }
                  else
                  {
-                      printf("ERRO 10: Caractere '%c' não esperado na linha %d coluna 5d!", c, g_linha, g_coluna);
+                      printf("ERRO 10: Caractere '%c' não esperado na linha %d coluna 5d!", c, linha, coluna);
                       exit(1);
                  }
 
@@ -358,7 +404,7 @@ TOKEN * analex(FILE * fd)
 
                  //avanca um char e sai..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
                  t->tipo = CHARCON;
 
                  return t;
@@ -367,7 +413,7 @@ TOKEN * analex(FILE * fd)
             case 12:
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c != '"')
                  {
@@ -381,7 +427,7 @@ TOKEN * analex(FILE * fd)
 
                      if(k < 200)
                      {
-                          TAB_LITERAIS[g_lit_iterator][k++] = c;
+                          TAB_LITERAIS[cont_literal][k++] = c;
                      }
                  }
                  else // se == '"'
@@ -396,13 +442,13 @@ TOKEN * analex(FILE * fd)
 
                  t->tipo = CADEIACON;
 
-                 TAB_LITERAIS[g_lit_iterator][k] = '\0';
+                 TAB_LITERAIS[cont_literal][k] = '\0';
 
-                 t->posicaoLiteral = g_lit_iterator;
+                 t->posicaoLiteral = cont_literal;
 
                  //avanca um char e sai..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  return t;
 
@@ -417,7 +463,7 @@ TOKEN * analex(FILE * fd)
 
                  //avanca um char e sai..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  return t;
 
@@ -426,7 +472,7 @@ TOKEN * analex(FILE * fd)
 
                  //avanca um char e tenta sair..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '=')
                  {
@@ -451,7 +497,7 @@ TOKEN * analex(FILE * fd)
 
                  //avanca um char e sai..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  return t;
 
@@ -459,7 +505,7 @@ TOKEN * analex(FILE * fd)
             case 17:
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '&')
                  {
@@ -467,7 +513,7 @@ TOKEN * analex(FILE * fd)
                  }
                  else
                  {
-                      printf("ERRO 17: Caractere '%c' não esperado na linha %d coluna 5d!", c, g_linha, g_coluna);
+                      printf("ERRO 17: Caractere '%c' não esperado na linha %d coluna 5d!", c, linha, coluna);
                       exit(1);
                  }
 
@@ -483,7 +529,7 @@ TOKEN * analex(FILE * fd)
 
                  //avanca um char e sai..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  return t;
 
@@ -492,7 +538,7 @@ TOKEN * analex(FILE * fd)
             case 19:
 
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  if(c == '|')
                  {
@@ -500,7 +546,7 @@ TOKEN * analex(FILE * fd)
                  }
                  else
                  {
-                      printf("ERRO 19: Caractere '%c' não esperado na linha %d coluna 5d!", c, g_linha, g_coluna);
+                      printf("ERRO 19: Caractere '%c' não esperado na linha %d coluna 5d!", c, linha, coluna);
                       exit(1);
                  }
 
@@ -516,7 +562,7 @@ TOKEN * analex(FILE * fd)
 
                  //avanca um char e sai..
                  c = fgetc(fd);
-                 g_coluna++;
+                 coluna++;
 
                  return t;
 
