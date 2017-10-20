@@ -760,12 +760,6 @@
 					</to>&#13;
 				</fsa_trans>&#13;
 			</structure>&#13;
-			<structure type="start_state">&#13;
-				<state>&#13;
-					<name>0</name>&#13;
-					<id>0</id>&#13;
-				</state>&#13;
-			</structure>&#13;
 			<structure type="state_set">&#13;
 				<state>&#13;
 					<name>0</name>&#13;
@@ -1108,6 +1102,12 @@
 				<state>&#13;
 					<name>19</name>&#13;
 					<id>60</id>&#13;
+				</state>&#13;
+			</structure>&#13;
+			<structure type="start_state">&#13;
+				<state>&#13;
+					<name>0</name>&#13;
+					<id>0</id>&#13;
 				</state>&#13;
 			</structure>&#13;
 		</structure>&#13;

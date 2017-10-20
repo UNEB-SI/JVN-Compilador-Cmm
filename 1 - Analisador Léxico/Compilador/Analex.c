@@ -168,7 +168,7 @@ TOKEN analex(FILE * fp)
                 else                        estado = 54; // INVÁLIDO
 
                 break;
-            case 1://33
+            case 1:
 
                 c = fgetc(fp);
 
@@ -196,7 +196,7 @@ TOKEN analex(FILE * fp)
                 return token;
 
                 break;
-            case 3://30
+            case 3:
 
                 c = fgetc(fp);
 
@@ -214,7 +214,7 @@ TOKEN analex(FILE * fp)
                 }
 
                 break;
-            case 4://34
+            case 4:
 
                 c = fgetc(fp);
 
@@ -238,6 +238,7 @@ TOKEN analex(FILE * fp)
 
                 if(c == '/')
                 {
+                    pos--;
                     token.cat = CMT;
                     token.comentario[pos] = EOS;
                     return token;
@@ -246,6 +247,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     token.comentario[pos] = c;
+                    pos++;
                     estado = 4;
                 }
 
