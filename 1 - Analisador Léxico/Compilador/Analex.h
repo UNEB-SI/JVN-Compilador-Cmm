@@ -3,31 +3,29 @@
 #include <ctype.h>
 #include <string.h>
 
-/*######### INICIO CONSTANTES ##########*/
+//quantidade e comprimento maximo de elementos
 
-#define SIZE_PR      12
+#define QTD_PR      12
 #define COMP_PR     11
 
-#define SIZE_CTL     255
+#define QTD_CTL     255
 #define COMP_CTL    255
 
-#define SIZE_SN      20
+#define QTD_SN      20
 #define COMP_SN     3
 
-#define COMP_NUM    20 
-#define COMP_LEXEMA 31
+#define COMP_NUM    20  //comprimento maximo de uma constante inteira
+#define COMP_LEXEMA 31  //comprimento maximo de um identificador
 
 //_____________________________________________
 
-#define EOS         '\0' //indica fim da string
-#define ARQ         100  //qtd máxima do nome de arquivo
+#define EOS         '\0' //final da string
+#define ARQ         100  //maximo de 99 caracteres/nome de arquivo
 
-/*######### FIM CONSTANTES ##########*/
-
-extern char TAB_PR[SIZE_PR][COMP_PR];
-extern char TAB_SN [SIZE_SN][COMP_SN];
-extern char TAB_CTL[SIZE_CTL][COMP_CTL];
-extern int ultimaPosicaoCTL;
+extern char TAB_PR[QTD_PR][COMP_PR];        //palavras-reservadas
+extern char TAB_SN [QTD_SN][COMP_SN];        //simbolos de sinais
+extern char TAB_CTL[QTD_CTL][COMP_CTL];     //simbolos de constantes literais
+extern int posUltimaCTL;                    //posicao da ultima constante literal inserida na tabCTL
 extern int contLinha;
 
 /*######### INICIO CATEGORIAS ##########*/
@@ -39,7 +37,7 @@ extern int contLinha;
 //CTL  - Constante Literal
 //SN   - Sinal
 //EOF  - Ø
-typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, FA, CMT } CATEGORIA;
+typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, FA } CATEGORIA;
 /*######### FIM CATEGORIAS ##########*/
 
 /*######### INICIO SINAIS ##########*/
@@ -59,18 +57,20 @@ typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUA
 /*######### FIM PALAVRAS RESERVADAS ##########*/
 
 /*######### INICIO TOKEN ##########*/
-//lexema          :   PR, ID, SN
-//CodigoPr        :   PR
-//CodigoSn        :   SN
-//ValorInteiro    :   CTI ; CTC
-//ValorReal       :   CTR
-//PosicaoLiteral  :   CTL
+/*Especificacao da (estrutura do) token
+    lexema          :   PR, ID, SN
+    CodigoPr        :   PR
+    CodigoSn        :   SN
+    ValorInteiro    :   CTI ; CTC
+    ValorReal       :   CTR
+    PosicaoLiteral  :   CTL
 
+OBS.: A codificacao inteira de constante caracter (CTC) sera um inteiro em valorInt.
+*/
 typedef struct
 {
     CATEGORIA cat;
     char lexema[COMP_LEXEMA];
-    char comentario[100];
 
     union{
         PALAVRA_RESERVADA CodigoPr;
@@ -83,11 +83,11 @@ typedef struct
 /*######### FIM TOKEN ##########*/
 
 /*######### INICIO  ##########*/
-FILE* abreArquivo ();
+FILE* abrirArq ();
 TOKEN analex(FILE*);
-int buscaPalavraReservada(char []);
-int insereInTabCtl(char []);
-void imprimeToken(TOKEN);
-void fechaArquivo (FILE*);
+int buscarTabPR(char []);
+int inserirTabCTL(char []);
+void imprimirToken(TOKEN);
+void fecharArq (FILE*);
 
 /*######### FIM  ##########*/

@@ -11,17 +11,25 @@ void excecao(msg,linha){
     printf("Linha: %i - %s", linha,msg);
 }
 
-int buscaPalavraReservada(char lexema[COMP_LEXEMA]) {
+/*
+Funcao buscarTabPR: determina se existe uma entrada para um lexema na tabela de simbolos de palavras-reservadas.
+
+    - se houver, retorna o indice dessa entrada ou -1, se lexema nao for encontrado
+*/
+
+int buscarTabPR(char lexema[COMP_LEXEMA]) {
 
     int i;
-    for (i = 0; i < SIZE_PR; i++) {
-        if (strcmp (TAB_PR[i], lexema) == 0) return i;
+    for (i = 0; i < QTD_PR; i++) {
+        if (strcmp (TAB_PR[i], lexema) == 0) return i; //caso iguais, retorna a posicao da palavra-reservada na tabPR
     }
 
-    return -1;
+    return -1; //nao e uma palavra reservada
 }
 
-FILE* abreArquivo () {
+//Funcao abrirArq: solicita ao usuario o nome do arquivo e abri-o para leitura no modo texto
+
+FILE* abrirArq () {
     char arq[ARQ];  //armazena o nome do arquivo
     char modo[4];   //armazena o modo de abertura do arquivo
     FILE* fp;       //ponteiro do arquivo
@@ -42,8 +50,9 @@ FILE* abreArquivo () {
     return (fp);
 }
 
+//Função fecharArq: fecha um arquivo
 
-void fechaArquivo (FILE* fp) {
+void fecharArq (FILE* fp) {
     if (fclose(fp)) { //retorna zero se a operação de fechamento for bem-sucedida
         printf ("\n\tErro fatal no fechamento de arquivo. O programa sera encerrado.\n\nPressione Enter para sair.");
         getchar();
@@ -52,12 +61,15 @@ void fechaArquivo (FILE* fp) {
     }
 }
 
-void imprimeToken(TOKEN token) {
+//Funcao imprimirToken: imprimi as informacoes dos tokens
+
+void imprimirToken(TOKEN token) {
 
     switch (token.cat) {
 
     case PR:
         printf ("\n< PR , %s >", token.lexema);
+        //printf ("codPR %d", token.valor.codPR);
         break;
 
     case ID:
@@ -66,6 +78,7 @@ void imprimeToken(TOKEN token) {
 
     case CTL:
         printf ("\n< CTL, %s >", TAB_CTL[token.atr.PosicaoLiteral]);
+        //printf ("posLiteral %d", token.valor.posLiteral);
         break;
 
     case CTI:
@@ -73,23 +86,20 @@ void imprimeToken(TOKEN token) {
         break;
 
     case CTC:
-        if (token.atr.ValorInteiro == -1)           printf ("\n< CTC, \'\' >");
-        else if (token.atr.ValorInteiro == '\n')    printf ("\n< CTC, \\n >");
-        else if (token.atr.ValorInteiro == '\0')    printf ("\n< CTC, \\0 >");
-        else if (token.atr.ValorInteiro == '\'')    printf ("\n< CTC, \\\' >");
-        else                                        printf ("\n< CTC, %c >", token.atr.ValorInteiro);
+        if (token.atr.ValorInteiro == -1) printf ("\n< CTC, \'\' >");
+        else if (token.atr.ValorInteiro == '\n') printf ("\n< CTC, \\n >");
+        else if (token.atr.ValorInteiro == '\0') printf ("\n< CTC, \\0 >");
+        else if (token.atr.ValorInteiro == '\'') printf ("\n< CTC, \\\' >");
+        else printf ("\n< CTC, %c >", token.atr.ValorInteiro);
         break;
 
     case SN:
         printf ("\n< SN , %s >", token.lexema);
+        //printf ("codSN %d", token.atr.codSN);
         break;
 
     case CTR:
         printf ("\n< CTR, %f >", token.atr.ValorReal);
-        break;
-
-    case CMT:
-        printf ("\n< CMT , /* %s */ >", token.comentario);
         break;
 
     case FA:
@@ -98,26 +108,31 @@ void imprimeToken(TOKEN token) {
     }
 }
 
-int insereInTabCtl (char literal[COMP_CTL]) {
+/*
+Funcao inserirTabCTL:
 
-    if (ultimaPosicaoCTL != -1) {
+    -retorna o indice da entrada para a cadeia literal, caso ja exista;
+    -retorna o indice da nova entrada para a cadeia literal, caso nao exista;
+*/
+
+
+int inserirTabCTL (char literal[COMP_CTL]) {
+
+    if (posUltimaCTL != -1) {
 
          int i = 0;
-         while (i <= ultimaPosicaoCTL) {
-               if (strcmp (TAB_CTL[i], literal) == 0) return i;
+         while (i <= posUltimaCTL) {
+               if (strcmp (TAB_CTL[i], literal) == 0) return i; //caso iguais, retorna a posicao da constante literal na tabCTL
                i++;
          }
     }
 
-    if (ultimaPosicaoCTL + 1 >= SIZE_CTL) 
-    {
-        printf("limite maximo de constantes literais/programa atingido");
-    }
-    else 
-    {
-        ultimaPosicaoCTL++;
-        strcpy (TAB_CTL[ultimaPosicaoCTL], literal);
-        return ultimaPosicaoCTL;
+    if (posUltimaCTL + 1 >= QTD_CTL) printf("limite maximo de constantes literais/programa atingido");
+    else {
+
+        posUltimaCTL++;
+        strcpy (TAB_CTL[posUltimaCTL], literal); //inseri nova constante literal
+        return posUltimaCTL; //retorna a posicao da constante literal na tabCTL
     }
 }
 
@@ -126,8 +141,8 @@ int insereInTabCtl (char literal[COMP_CTL]) {
 
 TOKEN analex(FILE * fp)
 {
-    char literal[COMP_CTL];
-    char num[COMP_NUM];
+    char literal[COMP_CTL]; //armazena temporariamente a constante literal
+    char num[COMP_NUM];     //armazena temporariamente a constante inteira e real
     int c;
     int estado = 0;
     int pos = 0;
@@ -198,56 +213,33 @@ TOKEN analex(FILE * fp)
                 break;
             case 3:
 
-                c = fgetc(fp);
-
-                if(c == '*')
-                {                    
-                    token.comentario[pos] = c;
-                    pos++;
-                    estado = 4;
-                }
-                else
+                if(isprint(c))
                 {
-                    token.comentario[pos] = c;
-                    pos++;
-                    estado = 3;
+                    estado = 4;
                 }
 
                 break;
             case 4:
 
-                c = fgetc(fp);
 
                 if(c == '*')
                 {
-                    token.comentario[pos] = c;
-                    pos++;
                     estado = 5;
                 }
-                else
+                else if(isprint(c))
                 {
-                    token.comentario[pos] = c;
-                    pos++;
                     estado = 4;
                 }
 
                 break;
             case 5:
 
-                c = fgetc(fp);
-
                 if(c == '/')
                 {
-                    pos--;
-                    token.cat = CMT;
-                    token.comentario[pos] = EOS;
-                    return token;
                     estado = 0;
                 }
-                else
+                else if(isprint(c))
                 {
-                    token.comentario[pos] = c;
-                    pos++;
                     estado = 4;
                 }
 
@@ -268,6 +260,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     excecao("token invalido",contLinha);
+                    //printf("Linha: %i - token invalido", contLinha);
                 }
 
                 break;
@@ -283,6 +276,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     excecao("token invalido",contLinha);
+                    //printf("Linha: %i - token invalido", contLinha);
                 }
 
                 break;
@@ -308,6 +302,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     excecao("token invalido",contLinha);
+                    //printf("Linha: %i - token invalido", contLinha);
                 }
 
                 break;
@@ -404,6 +399,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     excecao("token invalido",contLinha);
+                    //printf("Linha: %i - token invalido", contLinha);
                 }
 
                 break;
@@ -416,6 +412,7 @@ TOKEN analex(FILE * fp)
                 if (pos >= COMP_CTL)
                 {
                     excecao("comprimento da constante literal maior do que o permitido",contLinha);
+                    //printf("Linha: %i - comprimento da constante literal maior do que o permitido", contLinha);
                 }
                 if(isprint(c) && c != '\"' && c != '\n')
                 {
@@ -429,6 +426,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     excecao("token invalido",contLinha);
+                    //printf("Linha: %i - token invalido", contLinha);
                 }
 
                 break;
@@ -438,7 +436,7 @@ TOKEN analex(FILE * fp)
                     CADEIACON
                 */
                 token.cat = CTL;
-                token.atr.PosicaoLiteral = insereInTabCtl(literal);
+                token.atr.PosicaoLiteral = inserirTabCTL(literal);
                 return token;
 
                 break;
@@ -451,6 +449,7 @@ TOKEN analex(FILE * fp)
                 if (pos >= COMP_NUM)
                 {
                     excecao("comprimento da constante inteira ou real maior do que o permitido",contLinha);
+                    //printf("Linha: %i - comprimento da constante inteira ou real maior do que o permitido", contLinha);
                 }
                 if(isdigit(c))
                 {
@@ -464,6 +463,7 @@ TOKEN analex(FILE * fp)
                     if (pos >= COMP_NUM)
                     {
                         excecao("comprimento da constante inteira ou real maior do que o permitido",contLinha);
+                        //printf("Linha: %i - comprimento da constante inteira ou real maior do que o permitido", contLinha);
                     }
 
                     estado = 22;
@@ -498,6 +498,7 @@ TOKEN analex(FILE * fp)
                 else
                 {
                     excecao("token invalido",contLinha);
+                    //printf("Linha: %i - token invalido", contLinha);
                 }
 
                 break;
@@ -510,6 +511,7 @@ TOKEN analex(FILE * fp)
                 if (pos >= COMP_NUM)
                 {
                     excecao("comprimento da constante inteira ou real maior do que o permitido",contLinha);
+                    //printf("Linha: %i - comprimento da constante inteira ou real maior do que o permitido", contLinha);
                 }
                 if(isdigit(c))
                 {
@@ -543,6 +545,7 @@ TOKEN analex(FILE * fp)
                 if (pos >= COMP_LEXEMA)
                 {
                     excecao("comprimento do identificador maior do que o permitido",contLinha);
+                    //printf("Linha: %i - comprimento do identificador maior do que o permitido", contLinha);
                 }
                 if(isalnum(c) || c == '_')
                 {
@@ -562,7 +565,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 ungetc(c, fp);
-                int p = buscaPalavraReservada(token.lexema);
+                int p = buscarTabPR(token.lexema);
 
                 if (p == -1)
                 {
@@ -705,7 +708,7 @@ TOKEN analex(FILE * fp)
                     OU LÓGICO
                 */
                 token.cat = SN;
-                strcpy (token.lexema, "││");
+                strcpy (token.lexema, "||");
                 token.atr.CodigoSn = OU_LOGICO;
                 return token;
 
