@@ -11,3 +11,17 @@
 	<ctype.h>
 	<string.h>
 
+1508448571 source:d:\users\clb161675\downloads\trabalho\1 - analisador léxico\compilador\analex.c
+	"Analex.h"
+
+1508446337 d:\users\clb161675\downloads\trabalho\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1508445685 source:d:\users\clb161675\downloads\trabalho\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Analex.h"
+
