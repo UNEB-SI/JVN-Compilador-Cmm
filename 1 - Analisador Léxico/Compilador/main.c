@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "Analex.h"
 
-char TAB_SN[QTD_SN][COMP_SN] = {'(', ')', '{', '}','+', '-', '/', '*', ',', '.', ';', '=', '==', '!', '!=', '>', '<', '>=', '<=', '&&', '││'};
+char TAB_SN[SIZE_SN][COMP_SN] = {'(', ')', '{', '}','+', '-', '/', '*', ',', '.', ';', '=', '==', '!', '!=', '>', '<', '>=', '<=', '&&', '││'};
 char TAB_PR[SIZE_PR][COMP_PR] = {"caracter", "inteiro", "real", "booleano", "semparam", "semretorno", "se", "senao", "enquanto", "para", "retorne"};
 
 char TAB_CTL[SIZE_CTL][COMP_CTL]; 
