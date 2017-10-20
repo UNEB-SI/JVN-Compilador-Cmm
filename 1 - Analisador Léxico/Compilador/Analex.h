@@ -27,7 +27,7 @@
 extern char TAB_PR[SIZE_PR][COMP_PR];
 extern char TAB_SN [SIZE_SN][COMP_SN];
 extern char TAB_CTL[SIZE_CTL][COMP_CTL];
-extern int posUltimaCTL;
+extern int ultimaPosicaoCTL;
 extern int contLinha;
 
 /*######### INICIO CATEGORIAS ##########*/
@@ -83,11 +83,11 @@ typedef struct
 /*######### FIM TOKEN ##########*/
 
 /*######### INICIO  ##########*/
-FILE* abrirArq ();
+FILE* abreArquivo ();
 TOKEN analex(FILE*);
-int buscarTabPR(char []);
-int inserirTabCTL(char []);
-void imprimirToken(TOKEN);
-void fecharArq (FILE*);
+int buscaPalavraReservada(char []);
+int insereInTabCtl(char []);
+void imprimeToken(TOKEN);
+void fechaArquivo (FILE*);
 
 /*######### FIM  ##########*/
