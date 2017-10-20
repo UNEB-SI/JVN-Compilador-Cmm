@@ -3,9 +3,32 @@
 #include <ctype.h>
 #include <string.h>
 
-#define SN_SIZE 21
-#define PR_SIZE 11
-#define CT_SIZE 7
+/*######### INICIO CONSTANTES ##########*/
+
+#define SIZE_PR      12
+#define COMP_PR     11
+
+#define SIZE_CTL     255
+#define COMP_CTL    255
+
+#define SIZE_SN      20
+#define COMP_SN     3
+
+#define COMP_NUM    20 
+#define COMP_LEXEMA 31
+
+//_____________________________________________
+
+#define EOS         '\0' //indica fim da string
+#define ARQ         100  //qtd máxima do nome de arquivo
+
+/*######### FIM CONSTANTES ##########*/
+
+extern char TAB_PR[SIZE_PR][COMP_PR];
+extern char TAB_SN [SIZE_SN][COMP_SN];
+extern char TAB_CTL[SIZE_CTL][COMP_CTL];
+extern int posUltimaCTL;
+extern int contLinha;
 
 /*######### INICIO CATEGORIAS ##########*/
 //ID   - Identificador
@@ -16,55 +39,57 @@
 //CTL  - Constante Literal
 //SN   - Sinal
 //EOF  - Ø
-typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN } CATEGORIA;
-char TAB_CATEGORIA[CT_SIZE][25]={"IDENTIFICADOR", "PALAVRA RESERVADA", "CONSTANTE INTEIRA","CONSTANTE REAL"," CONSTANTE CARACTER", "CONSTANTE LITERAL","SINAL"};
+typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, FA } CATEGORIA;
 /*######### FIM CATEGORIAS ##########*/
 
 /*######### INICIO SINAIS ##########*/
 // ( ) { } + - / * , ; = == ! != > < >= <= && ||
-typedef enum { ABRE_PARENTESE, FECHA_PARENTESE, ABRE_CHAVE, FECHA_CHAVE, SOMA, SUBTRAI, DIVIDE, MULTIPLICA, VIRGULA, PONTO, PONTO_E_VIGULA,
-               ATRIBUI, IGUALA, NEGA, DIFERENTE, MAIOR_QUE, MENOR_QUE, MAIOR_OU_IGUAL, MENOR_OU_IGUAL, E_LOGICO, OU_LOGICO
+typedef enum {  ABRE_PARENTESE,     FECHA_PARENTESE,        ABRE_CHAVE,         FECHA_CHAVE,
+                SOMA,               SUBTRAI,                DIVIDE,             MULTIPLICA,
+                VIRGULA,            PONTO,                  PONTO_E_VIGULA,     ATRIBUI,
+                IGUALA,             NEGA,                   DIFERENTE,          MAIOR_QUE,
+                MENOR_QUE,          MAIOR_OU_IGUAL,         MENOR_OU_IGUAL,     E_LOGICO, OU_LOGICO
             } SINAIS;
-char TAB_SN[SN_SIZE][2] = {'(', ')', '{', '}','+', '-', '/', '*', ',', '.', ';', '=', '==', '!', '!=', '>', '<', '>=', '<=', '&&', '││'};
+
 /*######### FIM SINAIS ##########*/
 
 /*######### INICIO PALAVRAS RESERVADAS ##########*/
 //caracter inteiro real booleano semparam semretorno se senao enquanto para retorne
 typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE } PALAVRA_RESERVADA;
-char TAB_PR[PR_SIZE][15] = {"caracter", "inteiro", "real", "booleano", "semparam", "semretorno", "se", "senao", "enquanto", "para", "retorne"};
 /*######### FIM PALAVRAS RESERVADAS ##########*/
 
 /*######### INICIO TOKEN ##########*/
+/*Especificacao da (estrutura do) token
+    lexema          :   PR, ID, SN
+    CodigoPr        :   PR
+    CodigoSn        :   SN
+    ValorInteiro    :   CTI ; CTC
+    ValorReal       :   CTR
+    PosicaoLiteral  :   CTL
+
+OBS.: A codificacao inteira de constante caracter (CTC) sera um inteiro em valorInt.
+*/
 typedef struct
 {
     CATEGORIA cat;
-    char lexema[31];
+    char lexema[COMP_LEXEMA];
 
     union{
         PALAVRA_RESERVADA CodigoPr;
-        SINAIS CodSinal;
+        SINAIS CodigoSn;
         int ValorInteiro;
         float ValorReal;
         int PosicaoLiteral;
-    };
+    } atr;
 } TOKEN;
 /*######### FIM TOKEN ##########*/
 
 /*######### INICIO  ##########*/
-TOKEN * analex(FILE * fd);
-// int op_Rel();
-// void cmd();
-// void atrib();
-// void decl_Var();
-// void tipo();
-// int eh_Tipo();
-// void tipos_Param();
-// void func();
-// void expr();
-// void expr_Simp();
-// void termo();
-// void fator();
-// void prog();
-// void decl();
+FILE* abrirArq ();
+TOKEN analex(FILE*);
+int buscarTabPR(char []);
+int inserirTabCTL(char []);
+void imprimirToken(TOKEN);
+void fecharArq (FILE*);
 
 /*######### FIM  ##########*/
