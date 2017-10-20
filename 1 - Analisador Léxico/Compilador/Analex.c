@@ -583,7 +583,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[PONTO_E_VIGULA]);
+                strcpy (token.lexema, ";");
                 token.atr.CodigoSn = PONTO_E_VIGULA;
                 return token;
 
@@ -595,7 +595,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[SUBTRAI]);
+                strcpy (token.lexema, "-");
                 token.atr.CodigoSn = SUBTRAI;
                 return token;
 
@@ -607,7 +607,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[SOMA]);
+                strcpy (token.lexema, "+");
                 token.atr.CodigoSn = SOMA;
                 return token;
 
@@ -619,7 +619,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[ABRE_CHAVE]);
+                strcpy (token.lexema, "{");
                 token.atr.CodigoSn = ABRE_CHAVE;
                 return token;
 
@@ -631,7 +631,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[FECHA_CHAVE]);
+                strcpy (token.lexema, "}");
                 token.atr.CodigoSn = FECHA_CHAVE;
                 return token;
 
@@ -643,7 +643,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[ABRE_PARENTESE]);
+                strcpy (token.lexema, "(");
                 token.atr.CodigoSn = ABRE_PARENTESE;
                 return token;
 
@@ -655,7 +655,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[FECHA_PARENTESE]);
+                strcpy (token.lexema, ")");
                 token.atr.CodigoSn = FECHA_PARENTESE;
                 return token;
 
@@ -667,7 +667,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[MULTIPLICA]);
+                strcpy (token.lexema, "*");
                 token.atr.CodigoSn = MULTIPLICA;
                 return token;
 
@@ -679,7 +679,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[VIRGULA]);
+                strcpy (token.lexema, ",");
                 token.atr.CodigoSn = VIRGULA;
                 return token;
 
@@ -705,7 +705,7 @@ TOKEN analex(FILE * fp)
                     OU LÓGICO
                 */
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[OU_LOGICO]);
+                strcpy (token.lexema, "││");
                 token.atr.CodigoSn = OU_LOGICO;
                 return token;
 
@@ -732,7 +732,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[E_LOGICO]);
+                strcpy (token.lexema, "&&");
                 token.atr.CodigoSn = E_LOGICO;
                 return token;
 
@@ -758,7 +758,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[IGUALA]);
+                strcpy (token.lexema, "==");
                 token.atr.CodigoSn = IGUALA;
                 return token;
 
@@ -772,7 +772,7 @@ TOKEN analex(FILE * fp)
 
                 ungetc(c, fp);
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[ATRIBUI]);
+                strcpy (token.lexema, "=");
                 token.atr.CodigoSn = ATRIBUI;
                 return token;
 
@@ -797,7 +797,7 @@ TOKEN analex(FILE * fp)
                     DIFERENTE
                 */
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[DIFERENTE]);
+                strcpy (token.lexema, "!=");
                 token.atr.CodigoSn = DIFERENTE;
                 return token;
 
@@ -810,7 +810,7 @@ TOKEN analex(FILE * fp)
                 */
                 ungetc(c, fp);
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[NEGA]);
+                strcpy (token.lexema, "!");
                 token.atr.CodigoSn = NEGA;
                 return token;
 
@@ -836,7 +836,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[MAIOR_OU_IGUAL]);
+                strcpy (token.lexema, ">=");
                 token.atr.CodigoSn = MAIOR_OU_IGUAL;
                 return token;
 
@@ -849,7 +849,7 @@ TOKEN analex(FILE * fp)
                 */
                 ungetc(c, fp);
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[MAIOR_QUE]);
+                strcpy (token.lexema, ">");
                 token.atr.CodigoSn = MAIOR_QUE;
                 return token;
 
@@ -875,7 +875,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[MENOR_OU_IGUAL]);
+                strcpy (token.lexema, "<=");
                 token.atr.CodigoSn = MENOR_OU_IGUAL;
                 return token;
 
@@ -889,7 +889,7 @@ TOKEN analex(FILE * fp)
 
                 ungetc(c, fp);
                 token.cat = SN;
-                strcpy (token.lexema, TAB_SN[MENOR_QUE]);
+                strcpy (token.lexema, "<");
                 token.atr.CodigoSn = MENOR_QUE;
                 return token;
 
