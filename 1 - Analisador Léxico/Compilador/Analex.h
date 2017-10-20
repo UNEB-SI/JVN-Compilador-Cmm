@@ -39,7 +39,7 @@ extern int contLinha;
 //CTL  - Constante Literal
 //SN   - Sinal
 //EOF  - Ø
-typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, FA } CATEGORIA;
+typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, FA, CMT } CATEGORIA;
 /*######### FIM CATEGORIAS ##########*/
 
 /*######### INICIO SINAIS ##########*/
@@ -59,20 +59,18 @@ typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUA
 /*######### FIM PALAVRAS RESERVADAS ##########*/
 
 /*######### INICIO TOKEN ##########*/
-/*Especificacao da (estrutura do) token
-    lexema          :   PR, ID, SN
-    CodigoPr        :   PR
-    CodigoSn        :   SN
-    ValorInteiro    :   CTI ; CTC
-    ValorReal       :   CTR
-    PosicaoLiteral  :   CTL
+//lexema          :   PR, ID, SN
+//CodigoPr        :   PR
+//CodigoSn        :   SN
+//ValorInteiro    :   CTI ; CTC
+//ValorReal       :   CTR
+//PosicaoLiteral  :   CTL
 
-OBS.: A codificacao inteira de constante caracter (CTC) sera um inteiro em valorInt.
-*/
 typedef struct
 {
     CATEGORIA cat;
     char lexema[COMP_LEXEMA];
+    char comentario[100];
 
     union{
         PALAVRA_RESERVADA CodigoPr;

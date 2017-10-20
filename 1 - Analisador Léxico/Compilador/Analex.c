@@ -101,6 +101,10 @@ void imprimirToken(TOKEN token) {
     case CTR:
         printf ("\n< CTR, %f >", token.atr.ValorReal);
         break;
+        
+    case CMT:
+        printf ("\n< CMT , /* %s */ >", token.comentario);
+        break;
 
     case FA:
         printf ("\n< FA , %s >", token.lexema);
@@ -213,6 +217,8 @@ TOKEN analex(FILE * fp)
                 break;
             case 3:
 
+                c = fgetc(fp);
+
                 if(isprint(c))
                 {
                     estado = 4;
@@ -221,25 +227,34 @@ TOKEN analex(FILE * fp)
                 break;
             case 4:
 
+                c = fgetc(fp);
 
                 if(c == '*')
                 {
+                    token.comentario[pos] = c;
                     estado = 5;
                 }
                 else if(isprint(c))
                 {
+                    token.comentario[pos] = c;
                     estado = 4;
                 }
 
                 break;
             case 5:
 
+                c = fgetc(fp);
+
                 if(c == '/')
                 {
+                    token.cat = CMT;
+                    token.comentario[pos] = EOS;
+                    return token;
                     estado = 0;
                 }
                 else if(isprint(c))
                 {
+                    token.comentario[pos] = c;
                     estado = 4;
                 }
 
