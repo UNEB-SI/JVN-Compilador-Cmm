@@ -232,6 +232,7 @@ TOKEN analex(FILE * fp)
                 c = fgetc(fp);
                 if(c == '/')
                 {
+                    pos--;
                     token.cat = CMT;
                     token.comentario[pos] = EOS;
                     return token;

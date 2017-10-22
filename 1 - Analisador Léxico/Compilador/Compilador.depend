@@ -25,3 +25,17 @@
 	<stdlib.h>
 	"Analex.h"
 
+1508687543 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Analex.h"
+
+1508618854 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1508619724 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\analex.c
+	"Analex.h"
+

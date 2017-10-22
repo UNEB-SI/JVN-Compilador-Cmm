@@ -1,0 +1,82 @@
+inteiro a,b ,d,e;
+booleano falso;
+real float;
+inteiro a;
+semretorno aa(semparam),bb(semparam);
+
+real calc(semparam);
+inteiro calc2(inteiro a,booleano b);
+
+
+semretorno func(semparam){
+
+     
+     enquanto(tipo()){
+                     token =analex();
+                     decl_var();
+                     enquanto ((tipo==SN)&&(codigoSinal==virgula)){
+                            token = analex();
+                            decl_var();
+                     }
+                     se((tipo==SN)&&(codigoSinal==pontovirgula)) token = analex();
+                      senao {
+                           printf(linha);
+                           system();
+                           exit(1);
+                           }
+     }
+
+     enquanto(!((tipo==SN)&&(codigoSinal==fechachave))) {
+				cmd();
+				para(a=10;a<=f;a=a+1){
+					v=v+10*(15/45);
+				
+	
+				}
+	
+}
+     
+     token = analex();
+}
+
+inteiro tipo(inteiro a,caracter b){
+   
+    se(tokenTestetipo == PR ){
+                       se(tokenTestecodigoPR == CARACTER ) retorne 3; 
+                       senao se(tokenTestecodigoPR == INTEIRO ) retorne 1;  
+                            senao se(tokenTestecodigoPR == REAL ) retorne 1;  
+                                 senao se(tokenTestecodigoPR == BOOLEANO ) retorne 1;  
+                                      senao { printf(); retorne  0;}
+     }
+     senao { a=printf(a,linhaCodigo); retorne  0;}
+}
+
+
+inteiro teste(semparam){
+
+caracter a,b,c,m;
+real dez,d;
+
+
+dez =10;
+a=false;
+
+enquanto(!a){
+
+	se(dez*10 < 10){
+		 printf(d);
+		 calc2(dez,a);
+		 d=dez*(10/6)+(8*9/5+96-40);
+		 a= true;
+	         }
+	senao se ( dez*10==0)  dez=dez-1; 
+	
+
+}
+
+se ((((c==b))));
+
+
+
+}
+
