@@ -5,16 +5,16 @@
 
 /*######### INICIO CONSTANTES ##########*/
 #define SIZE_PR         12
-#define COMP_PR         11
+#define COMP_PR         15
 
-#define SIZE_CTL        255
-#define COMP_CTL        255
+#define SIZE_CTL        300
+#define COMP_CTL        300
 
 #define SIZE_SN         20
 #define COMP_SN         3
 
-#define COMP_NUM        20
-#define COMP_LEXEMA     31
+#define COMP_NUM        25
+#define COMP_LEXEMA     33
 
 #define EOS             '\0' //indica final da string
 #define ARQ             100  //qtd máxima do nome do arquivo
@@ -35,8 +35,10 @@ extern int contLinha;
 //CTC  - Constante Caracter
 //CTL  - Constante Literal
 //SN   - Sinal
-//EOF  - Ø
-typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, FA, CMT } CATEGORIA;
+//CMT  - Comentário
+//FA   - Final do arquivo
+//INV  - Token Inválido
+typedef enum { ID, PR, CTI, CTR, CTC, CTL, SN, CMT, FA, INV } CATEGORIA;
 /*######### FIM CATEGORIAS ##########*/
 
 /*######### INICIO SINAIS ##########*/
@@ -68,13 +70,13 @@ typedef struct
 {
     CATEGORIA cat;
     char lexema[COMP_LEXEMA];
-    char comentario[100];
+    char comentario[500];
 
     union{
         PALAVRA_RESERVADA CodigoPr;
         SINAIS CodigoSn;
         int ValorInteiro;
-        float ValorReal;
+        double ValorReal;
         int PosicaoLiteral;
     } atr;
 } TOKEN;

@@ -56,7 +56,7 @@ void imprimeToken(TOKEN token) {
     switch (token.cat) {
 
         case PR:
-            printf ("\n< PR , %s >", token.lexema);
+            printf ("\n< PR , pos %d, %s >", token.atr.CodigoPr, token.lexema);
             break;
 
         case ID:
@@ -64,7 +64,7 @@ void imprimeToken(TOKEN token) {
             break;
 
         case CTL:
-            printf ("\n< CTL, %s >", TAB_CTL[token.atr.PosicaoLiteral]);
+            printf ("\n< CTL, pos %d, %s >", token.atr.PosicaoLiteral, TAB_CTL[token.atr.PosicaoLiteral]);
             break;
 
         case CTI:
@@ -75,12 +75,11 @@ void imprimeToken(TOKEN token) {
             if (token.atr.ValorInteiro == -1) printf ("\n< CTC, \'\' >");
             else if (token.atr.ValorInteiro == '\n') printf ("\n< CTC, \\n >");
             else if (token.atr.ValorInteiro == '\0') printf ("\n< CTC, \\0 >");
-            else if (token.atr.ValorInteiro == '\'') printf ("\n< CTC, \\\' >");
             else printf ("\n< CTC, %c >", token.atr.ValorInteiro);
             break;
 
         case SN:
-            printf ("\n< SN , %s >", token.lexema);
+            printf ("\n< SN , pos %d, %s >", token.atr.CodigoSn, token.lexema);
             break;
 
         case CTR:
@@ -93,6 +92,10 @@ void imprimeToken(TOKEN token) {
 
         case CMT:
             printf ("\n< CMT , /* %s */ >", token.comentario);
+            break;
+
+        case INV:
+
             break;
     }
 }
@@ -161,8 +164,8 @@ TOKEN analex(FILE * fp)
                 else if(c == '!')           estado = 43;
                 else if(c == '>')           estado = 46;
                 else if(c == '<')           estado = 49;
-                else if(EH_DIGITO(c))         estado = 20;
-                else if(EH_LETRA(c))         estado = 25;
+                else if(EH_DIGITO(c))       estado = 20;
+                else if(EH_LETRA(c))        estado = 25;
                 else if(c == EOF)           estado = 52;
                 else                        estado = 54; // INVÁLIDO
 
@@ -905,6 +908,10 @@ TOKEN analex(FILE * fp)
 
                 contLinha++;
                 estado = 0;
+            case 54:
+                excecao("Token invalido",contLinha);
+                token.cat = INV;
+                return token;
 
                 break;
             default:
