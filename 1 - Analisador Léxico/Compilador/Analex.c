@@ -8,7 +8,7 @@
 #define EH_ALFA(p)EH_LETRA(p)||EH_DIGITO(p)||(p=='_')
 
 void excecao(msg,linha){
-    printf("Linha: %i - %s", linha,msg);
+    printf("\nLinha: %i - %s", linha,msg);
 }
 
 int buscaEmTabPr(char lexema[COMP_LEXEMA]) {
@@ -32,7 +32,7 @@ FILE* abreArquivo () {
     fflush (stdin);
 
     if ((fp = fopen (arq, modo)) == NULL) {
-        printf ("\n\tErro fatal na abertura de arquivo. O programa sera fechado.\n\nPressione Enter para sair.");
+        printf ("\n\tO arquivo nao pode ser aberto.\n\nPressione Enter para sair.");
         getchar();
         fflush(stdin);
         exit (1);
@@ -43,7 +43,7 @@ FILE* abreArquivo () {
 
 void fechaArquivo (FILE* fp) {
     if (fclose(fp)) {
-        printf ("\n\tErro fatal no fechamento de arquivo. O programa sera encerrado.\n\nPressione Enter para sair.");
+        printf ("\n\t arquivo nao pode ser fechado.\n\nPressione Enter para sair.");
         getchar();
         fflush(stdin);
         exit (1);
@@ -56,7 +56,7 @@ void imprimeToken(TOKEN token) {
     switch (token.cat) {
 
         case PR:
-            printf ("\n< PR , pos %d, %s >", token.atr.CodigoPr, token.lexema);
+            printf ("\n< PR , %s >", token.lexema);
             break;
 
         case ID:
@@ -64,7 +64,7 @@ void imprimeToken(TOKEN token) {
             break;
 
         case CTL:
-            printf ("\n< CTL, pos %d, %s >", token.atr.PosicaoLiteral, TAB_CTL[token.atr.PosicaoLiteral]);
+            printf ("\n< CTL, %s >", TAB_CTL[token.atr.PosicaoLiteral]);
             break;
 
         case CTI:
@@ -79,7 +79,7 @@ void imprimeToken(TOKEN token) {
             break;
 
         case SN:
-            printf ("\n< SN , pos %d, %s >", token.atr.CodigoSn, token.lexema);
+            printf ("\n< SN , %s >", token.lexema);
             break;
 
         case CTR:
@@ -87,7 +87,7 @@ void imprimeToken(TOKEN token) {
             break;
 
         case FA:
-            printf ("\n< FA , %s >", token.lexema);
+            printf ("\n< FA , %s >", token.comentario);
             break;
 
         case CMT:
@@ -896,7 +896,7 @@ TOKEN analex(FILE * fp)
                 */
 
                 token.cat = FA;
-                strcpy (token.lexema, "Final do Arquivo");
+                strcpy (token.comentario, "Final do Arquivo");
                 return token;
 
                 break;
