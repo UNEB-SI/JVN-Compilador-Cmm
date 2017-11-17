@@ -1,6 +1,6 @@
 //### ANALISADOR SINTÁTICO ###
 
-#include "Compilador.h"
+#include "Anasint.h"
 
 
 
