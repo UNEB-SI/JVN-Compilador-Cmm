@@ -4,7 +4,7 @@
 #include <string.h>
 
 /*######### INICIO CONSTANTES ##########*/
-#define SIZE_PR         13
+#define SIZE_PR         12
 #define COMP_PR         15
 
 #define SIZE_CTL        300
@@ -54,7 +54,7 @@ typedef enum {  ABRE_PARENTESE,     FECHA_PARENTESE,        ABRE_CHAVE,         
 
 /*######### INICIO PALAVRAS RESERVADAS ##########*/
 //caracter inteiro real booleano semparam semretorno se senao enquanto para retorne
-typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE, PROTOTIPO } PALAVRA_RESERVADA;
+typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE,PROTOTIPO } PALAVRA_RESERVADA;
 /*######### FIM PALAVRAS RESERVADAS ##########*/
 
 /*######### INICIO TOKEN ##########*/
