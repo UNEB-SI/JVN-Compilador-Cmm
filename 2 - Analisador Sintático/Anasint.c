@@ -1,24 +1,23 @@
 //### ANALISADOR SINTÁTICO ###
 
+#include "Analex.h"
 #include "Anasint.h"
 
-
-
-
-void erro () {
+void erro (FILE* fp) {
 	printf("\n Token Erro: %s \n",token.lexema);
+	printf("\n Token Erro: %i \n",token.atr.CodigoPr);
 	system("PAUSE");
  	exit(1);
 }
 
-void inicio () {
-	token=analex();
+void inicio (FILE* fp) {
+	token=analex(fp);
 }
 
-void decl_Var(){
-	 if(token.tipo==ID) token=analex();
+void decl_Var(FILE* fp){
+	 if(token.cat==ID) token=analex(fp);
 	 else{
-	 printf("ERRO, Tipo Esperado %d",linhas);
+	 printf("ERRO, Tipo Esperado %d",contLinha);
 	 system("PAUSE");
 	 exit(1);
 	 }
@@ -26,20 +25,20 @@ void decl_Var(){
 
 //	 ############################# TIPO ######################################
 
-	 void tipo(){
+	 void tipo(FILE* fp){
 
-	 	  		if(( (token.CodPr==caracter)||(token.CodPr==inteiro)||(token.CodPr==real)||(token.CodPr==booleano) )&& (token.tipo==PR))
-				     token=analex();
+	 	  		if(( (token.atr.CodigoPr==CARACTER)||(token.atr.CodigoPr==INTEIRO)||(token.atr.CodigoPr==REAL)||(token.atr.CodigoPr==BOOLEANO) )&& (token.cat==PR))
+				     token=analex(fp);
 				else {
 
-		   			 printf("ERRO, Tipo Esperado!%d",linhas);
+		   			 printf("ERRO, Tipo Esperado!%d",contLinha);
 	 				 system("PAUSE");
 	 				 exit(1);
 					 }
 				/*	 }
 		  else{
-		  	   printf("!%d",token.tipo);
-		  	   printf("ERRO, Tipo Esperado!%d",linhas);
+		  	   printf("!%d",token.cat);
+		  	   printf("ERRO, Tipo Esperado!%d",contLinha);
 	 		   system("PAUSE");
 	 		   exit(1);
 			  } */
@@ -47,10 +46,10 @@ void decl_Var(){
 
 
 //
-int eh_Tipo(){
+int eh_Tipo(FILE* fp){
 
-	 	  if(token.tipo==PR){
-	 	  		if( (token.CodPr==caracter)||(token.CodPr==inteiro)||(token.CodPr==real)||(token.CodPr==booleano) )
+	 	  if(token.cat==PR){
+	 	  		if( (token.atr.CodigoPr==CARACTER)||(token.atr.CodigoPr==INTEIRO)||(token.atr.CodigoPr==REAL)||(token.atr.CodigoPr==BOOLEANO) )
 				     return 1;
 					 }
 					 else return 0;
@@ -64,16 +63,16 @@ int eh_Tipo(){
 // ################################## TIPOS_P_OPC ###############################
 
 
-void tipos_p_opc(){
-	if((token.tipo==PR)&&(token.CodPr==semparam))
-	 	token=analex();
+void tipos_p_opc(FILE* fp){
+	if((token.cat==PR)&&(token.atr.CodigoPr==SEMPARAM))
+	 	token=analex(fp);
     else{
-		tipo();
-	 	if(token.tipo==ID) token=analex();
-		while((token.CodSn==virgula)&&(token.tipo==SN)){
-	            token=analex();
-				tipo();
-				if(token.tipo==ID) token=analex();
+		tipo(fp);
+	 	if(token.cat==ID) token=analex(fp);
+		while((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)){
+	            token=analex(fp);
+				tipo(fp);
+				if(token.cat==ID) token=analex(fp);
 		}
 	}
 }
@@ -82,481 +81,463 @@ void tipos_p_opc(){
 // ################################## TIPOS_PARAM ###############################
 
 
-void tipos_Param(){
-	if((token.tipo==PR)&&(token.CodPr==semparam)) token=analex();
+void tipos_Param(FILE* fp){
+	if((token.cat==PR)&&(token.atr.CodigoPr==SEMPARAM)) token=analex(fp);
     else{
-	 	tipo();
- 		if(token.tipo==ID){
-		   token=analex();
-		   while((token.CodSn==virgula)&&(token.tipo==SN)){
-                token=analex();
-				tipo();
-				if(token.tipo==ID)
-				      token=analex();
+	 	tipo(fp);
+ 		if(token.cat==ID){
+		   token=analex(fp);
+		   while((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)){
+                token=analex(fp);
+				tipo(fp);
+				if(token.cat==ID)
+				      token=analex(fp);
 				else{
 					 printf("ERRO, ID Esperado!");
-		  			 erro();
+		  			 erro(fp);
 				 }
 			}
 	   	}
 	    else{
 		 	printf("ERRO, ID Esperado!");
-			erro();
+			erro(fp);
 		}
 	}
 }
 
 // ###############################	PROG ####################################
 
-void prog(){
-	
+void prog(FILE* fp){
+
 
 	//PROTOTIPO
-	 if((token.tipo==PR)&&(token.CodPr==prototipo)) {
-		token=analex();
+	 if((token.cat==PR)&&(token.atr.CodigoPr==PROTOTIPO)) {
+		token=analex(fp);
 
-    	if((token.tipo==PR)&&(token.CodPr==semretorno)) {
-		 	token=analex();
+    	if((token.cat==PR)&&(token.atr.CodigoPr==SEMRETORNO)) {
+		 	token=analex(fp);
 
-		 	if(token.tipo==ID) token=analex();
+		 	if(token.cat==ID) token=analex(fp);
 		 	else  {
 		 		printf ("ERRO, ID Esperado!");
-		 		erro();
+		 		erro(fp);
 		 	}
 
-	 		if((token.tipo==SN)&&(token.CodSn==abreparenteses)) token=analex();
+	 		if((token.cat==SN)&&(token.atr.CodigoSn==ABRE_PARENTESE)) token=analex(fp);
 	 		else {
-				printf("ERRO, ( Esperado!na linha %d",linhas);
-		   	    erro();
+				printf("ERRO, ( Esperado!na linha %d",contLinha);
+		   	    erro(fp);
 			}
-			tipos_p_opc();
+			tipos_p_opc(fp);
 
-			 if((token.tipo==SN)&&(token.CodSn==fechaparenteses)) token=analex();
+			 if((token.cat==SN)&&(token.atr.CodigoSn==FECHA_PARENTESE)) token=analex(fp);
 			 else {
-			 	printf("ERRO, ) Esperado!na linha %d",linhas);
-		   	        erro();
+			 	printf("ERRO, ) Esperado!na linha %d",contLinha);
+		   	        erro(fp);
 			 }
 
-			 while(token.tipo!= SN || token.CodSn!=pontovirgula) {
+			 while(token.cat!= SN || token.atr.CodigoSn!=PONTO_E_VIGULA) {
 
-		 		if((token.CodSn==virgula)&&(token.tipo==SN)) token=analex();
+		 		if((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)) token=analex(fp);
 		 		else
-		        {printf("ERRO, , Esperado!na linha %d",linhas);
-		   	         erro();
+		        {printf("ERRO, , Esperado!na linha %d",contLinha);
+		   	         erro(fp);
 				}
 
-				if(token.tipo==ID) token=analex();
+				if(token.cat==ID) token=analex(fp);
 				else
-		        {printf("ERRO, ID Esperado!na linha %d",linhas);
-		   	         erro();
+		        {printf("ERRO, ID Esperado!na linha %d",contLinha);
+		   	         erro(fp);
 				}
 
-				if((token.CodSn==abreparenteses)&&(token.tipo==SN)) token=analex();
+				if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 				else
-				{ printf("ERRO, ( Esperado!na linha %d",linhas);
-		   	         erro();
+				{ printf("ERRO, ( Esperado!na linha %d",contLinha);
+		   	         erro(fp);
 				}
 
-				tipos_p_opc();
+				tipos_p_opc(fp);
 
-				if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
+				if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 				else {
-					printf("ERRO, ) Esperado!na linha %d",linhas);
-            			erro();
+					printf("ERRO, ) Esperado!na linha %d",contLinha);
+            			erro(fp);
 	  			}
 			}
 
-			if(token.CodSn==pontovirgula && token.tipo==SN) token=analex();
+			if(token.atr.CodigoSn==PONTO_E_VIGULA && token.cat==SN) token=analex(fp);
 			else {
-				printf("ERRO, ; Esperado!na linha %d",linhas);
-	   	        erro();
+				printf("ERRO, ; Esperado!na linha %d",contLinha);
+	   	        erro(fp);
 			}
 
 		}
 
 		else {
-			tipo();
-			if(token.tipo==ID) token=analex();
+			tipo(fp);
+			if(token.cat==ID) token=analex(fp);
 		 	else  {
 		 		printf ("ERRO, ID Esperado!");
-		 		erro();
+		 		erro(fp);
 		 	}
 
-	 		if((token.tipo==SN)&&(token.CodSn==abreparenteses)) token=analex();
+	 		if((token.cat==SN)&&(token.atr.CodigoSn==ABRE_PARENTESE)) token=analex(fp);
 			else {
-				printf("ERRO, ( Esperado!na linha %d",linhas);
+				printf("ERRO, ( Esperado!na linha %d",contLinha);
 		   	         system("PAUSE");
 		  	         exit(1);
 			}
 
-			tipos_p_opc();
+			tipos_p_opc(fp);
 
-	        if((token.tipo==SN)&&(token.CodSn==fechaparenteses)) token=analex();
+	        if((token.cat==SN)&&(token.atr.CodigoSn==FECHA_PARENTESE)) token=analex(fp);
 			else {
-			 	printf("ERRO, ) Esperado!na linha %d",linhas);
-		   	        erro();
-			} 
-		 	while(token.tipo!= SN || token.CodSn!=pontovirgula) {
-		 		if((token.CodSn==virgula)&&(token.tipo==SN)) token=analex();
+			 	printf("ERRO, ) Esperado!na linha %d",contLinha);
+		   	        erro(fp);
+			}
+		 	while(token.cat!= SN || token.atr.CodigoSn!=PONTO_E_VIGULA) {
+		 		if((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)) token=analex(fp);
 		 		else
-		        {printf("ERRO, , Esperado!na linha %d",linhas);
-		   	         erro();
+		        {printf("ERRO, , Esperado!na linha %d",contLinha);
+		   	         erro(fp);
 				}
 
-				if(token.tipo==ID) token=analex();
+				if(token.cat==ID) token=analex(fp);
 				else
-		        {printf("ERRO, ID Esperado!na linha %d",linhas);
-		   	         erro();
+		        {printf("ERRO, ID Esperado!na linha %d",contLinha);
+		   	         erro(fp);
 				}
-				if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-					token=analex();
-					tipos_p_opc();
+				if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+					token=analex(fp);
+					tipos_p_opc(fp);
 				}
 				else {
-				 	printf("ERRO, ( Esperado!na linha %d",linhas);
-					erro();
+				 	printf("ERRO, ( Esperado!na linha %d",contLinha);
+					erro(fp);
 				}
-				if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
+				if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 				else
-				{ 	printf("ERRO, ) Esperado!na linha %d",linhas);
-					erro();
+				{ 	printf("ERRO, ) Esperado!na linha %d",contLinha);
+					erro(fp);
 	  			}
 			}
-			if(token.CodSn==pontovirgula && token.tipo==SN) token=analex();
+			if(token.atr.CodigoSn==PONTO_E_VIGULA && token.cat==SN) token=analex(fp);
 			else {
-				printf("ERRO, ; Esperado!na linha %d",linhas);
-	   	        erro();
+				printf("ERRO, ; Esperado!na linha %d",contLinha);
+	   	        erro(fp);
 			}
 		}
 	}
 
 	//SEM RETORNO
-	if((token.CodPr==semretorno)&&(token.tipo==PR)) {
-		token=analex();
-		if(token.tipo==ID) token=analex();
+	if((token.atr.CodigoPr==SEMRETORNO)&&(token.cat==PR)) {
+		token=analex(fp);
+		if(token.cat==ID) token=analex(fp);
 		else {
-			printf("ERRO, ID Esperado!na linha %d",linhas);
-   	        erro();
+			printf("ERRO, ID Esperado!na linha %d",contLinha);
+   	        erro(fp);
 		}
-		if((token.CodSn==abreparenteses)&&(token.tipo==SN)) token=analex();
+		if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 		else {
-			printf("ERRO, ( Esperado!na linha %d",linhas);
-   	        erro();
+			printf("ERRO, ( Esperado!na linha %d",contLinha);
+   	        erro(fp);
 		}
-		tipos_Param();
-		if(token.CodSn==fechaparenteses && token.tipo==SN) token=analex();
+		tipos_Param(fp);
+		if(token.atr.CodigoSn==FECHA_PARENTESE && token.cat==SN) token=analex(fp);
 		else {
-			printf("ERRO, ) Esperado!na linha %d",linhas);
-   	        erro();
+			printf("ERRO, ) Esperado!na linha %d",contLinha);
+   	        erro(fp);
 		}
-		if(token.CodSn==abrechave && token.tipo==SN) token=analex();
+		if(token.atr.CodigoSn==ABRE_CHAVE && token.cat==SN) token=analex(fp);
 		else {
-			printf("ERRO, { Esperado!na linha %d",linhas);
-   	        erro();
+			printf("ERRO, { Esperado!na linha %d",contLinha);
+   	        erro(fp);
 		}
-		while (token.tipo==PR && (token.CodPr==caracter||token.CodPr==inteiro||token.CodPr==real||token.CodPr==booleano)) {
-				token=analex();
-				if(token.tipo==ID) token=analex();
+		while (token.cat==PR && (token.atr.CodigoPr==CARACTER||token.atr.CodigoPr==INTEIRO||token.atr.CodigoPr==REAL||token.atr.CodigoPr==BOOLEANO)) {
+				token=analex(fp);
+				if(token.cat==ID) token=analex(fp);
 				else {
-					printf("ERRO, ID Esperado!na linha %d",linhas);
-		   	        erro();
+					printf("ERRO, ID Esperado!na linha %d",contLinha);
+		   	        erro(fp);
 				}
-				while (token.tipo == SN && token.CodSn==virgula) {
-					token=analex();
-					if(token.tipo==ID) token=analex();
+				while (token.cat == SN && token.atr.CodigoSn==VIRGULA) {
+					token=analex(fp);
+					if(token.cat==ID) token=analex(fp);
 					else {
-						printf("ERRO, ID Esperado!na linha %d",linhas);
- 		   	         	erro();
+						printf("ERRO, ID Esperado!na linha %d",contLinha);
+ 		   	         	erro(fp);
 					}
 				}
-				if(token.CodSn==pontovirgula && token.tipo==SN) token=analex();
+				if(token.atr.CodigoSn==PONTO_E_VIGULA && token.cat==SN) token=analex(fp);
 				else {
-					printf("ERRO, ; Esperado!na linha %d",linhas);
-		   	        erro();
+					printf("ERRO, ; Esperado!na linha %d",contLinha);
+		   	        erro(fp);
 				}
 		}
 
-		//while (token.tipo!= SN || token.CodSn != fechachave) {
-		while ((token.tipo==PR && (token.CodPr==se ||token.CodPr==enquanto||token.CodPr==para||token.CodPr==retorne))||token.tipo==ID||(token.tipo==SN && (token.CodSn==abrechave||token.CodSn==pontovirgula))) {
-			cmd();
+		//while (token.cat!= SN || token.atr.CodigoSn != FECHA_CHAVE) {
+		while ((token.cat==PR && (token.atr.CodigoPr==SE ||token.atr.CodigoPr==ENQUANTO||token.atr.CodigoPr==PARA||token.atr.CodigoPr==RETORNE))||token.cat==ID||(token.cat==SN && (token.atr.CodigoSn==ABRE_CHAVE||token.atr.CodigoSn==PONTO_E_VIGULA))) {
+			cmd(fp);
 		}
 
-		if(token.CodSn==fechachave && token.tipo==SN) token=analex();
+		if(token.atr.CodigoSn==FECHA_CHAVE && token.cat==SN) token=analex(fp);
 		else {
-			printf("ERRO, } Esperado!na linha %d",linhas);
-   	        erro();
+			printf("ERRO, } Esperado!na linha %d",contLinha);
+   	        erro(fp);
 		}
 	}
 
 	//TIPO
-	if (token.tipo == PR && (token.CodPr==caracter||token.CodPr==inteiro||token.CodPr==real||token.CodPr==booleano)) {
-		
-		token=analex();
-		if(token.tipo==ID) token=analex();
+	if (token.cat == PR && (token.atr.CodigoPr==CARACTER||token.atr.CodigoPr==INTEIRO||token.atr.CodigoPr==REAL||token.atr.CodigoPr==BOOLEANO)) {
+
+		token=analex(fp);
+		if(token.cat==ID) token=analex(fp);
 		else {
-			printf("ERRO, ID Esperado!na linha %d",linhas);
-   	         	erro();
+			printf("ERRO, ID Esperado!na linha %d",contLinha);
+   	         	erro(fp);
 		}
-		if((token.CodSn==abreparenteses)&&(token.tipo==SN)) {
-			token=analex();
-			tipos_Param();
-			if(token.CodSn==fechaparenteses && token.tipo==SN) token=analex();
+		if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)) {
+			token=analex(fp);
+			tipos_Param(fp);
+			if(token.atr.CodigoSn==FECHA_PARENTESE && token.cat==SN) token=analex(fp);
 			else {
-				printf("ERRO, ) Esperado!na linha %d",linhas);
-	   	        erro();
+				printf("ERRO, ) Esperado!na linha %d",contLinha);
+	   	        erro(fp);
 			}
-			if(token.CodSn==abrechave && token.tipo==SN) token=analex();
+			if(token.atr.CodigoSn==ABRE_CHAVE && token.cat==SN) token=analex(fp);
 			else {
-				printf("ERRO, { Esperado!na linha %d",linhas);
-	   	        erro();
+				printf("ERRO, { Esperado!na linha %d",contLinha);
+	   	        erro(fp);
 			}
 
-			while (token.tipo==PR && (token.CodSn==caracter||token.CodSn==inteiro||token.CodSn==real||token.CodSn==booleano)) {
-				token=analex();
-				if(token.tipo==ID) token=analex();
+			while (token.cat==PR && (token.atr.CodigoPr==CARACTER||token.atr.CodigoPr==INTEIRO||token.atr.CodigoPr==REAL||token.atr.CodigoPr==BOOLEANO)) {
+				token=analex(fp);
+				if(token.cat==ID) token=analex(fp);
 				else {
-					printf("ERRO, ID Esperado!na linha %d",linhas);
-		   	        erro();
+					printf("ERRO, ID Esperado!na linha %d",contLinha);
+		   	        erro(fp);
 				}
-				while (token.tipo==SN && token.CodSn==virgula) {
-					token=analex();
-					if(token.tipo==ID) token=analex();
+				while (token.cat==SN && token.atr.CodigoSn==VIRGULA) {
+					token=analex(fp);
+					if(token.cat==ID) token=analex(fp);
 					else {
-						printf("ERRO, ID Esperado!na linha %d",linhas);
- 		   	         	erro();
+						printf("ERRO, ID Esperado!na linha %d",contLinha);
+ 		   	         	erro(fp);
 					}
 				}
-				if(token.CodSn==pontovirgula && token.tipo==SN) token=analex();
+				if(token.atr.CodigoSn==PONTO_E_VIGULA && token.cat==SN) token=analex(fp);
 				else {
-					printf("ERRO, ; Esperado!na linha %d",linhas);
-		   	        erro();
+					printf("ERRO, ; Esperado!na linha %d",contLinha);
+		   	        erro(fp);
 				}
 			}
-			
-			while ((token.tipo==PR && (token.CodPr==se ||token.CodPr==enquanto||token.CodPr==para||token.CodPr==retorne))||token.tipo==ID||(token.tipo==SN && (token.CodSn==abrechave||token.CodSn==pontovirgula))) {
-				cmd();
+
+			while ((token.cat==PR && (token.atr.CodigoPr==SE ||token.atr.CodigoPr==ENQUANTO||token.atr.CodigoPr==PARA||token.atr.CodigoPr==RETORNE))||token.cat==ID||(token.cat==SN && (token.atr.CodigoSn==ABRE_CHAVE||token.atr.CodigoSn==PONTO_E_VIGULA))) {
+				cmd(fp);
 			}
 
-			/*while (token.CodSn!=fechachave) {
-				cmd();
+			/*while (token.atr.CodigoSn!=FECHA_CHAVE) {
+				cmd(fp);
 			}*/
-			
-			if(token.CodSn==fechachave && token.tipo==SN) token=analex();
+
+			if(token.atr.CodigoSn==FECHA_CHAVE && token.cat==SN) token=analex(fp);
 			else {
-				printf("ERRO, } Esperado!na linha %d",linhas);
-	   	        erro();
+				printf("ERRO, } Esperado!na linha %d",contLinha);
+	   	        erro(fp);
 			}
 		}
 
-		else if (token.tipo== SN && (token.CodSn==pontovirgula || token.CodSn==virgula)) {
-			while (token.tipo!= SN || token.CodSn!=pontovirgula) {
-				if(token.CodSn==virgula && token.tipo==SN) token=analex();
+		else if (token.cat== SN && (token.atr.CodigoSn==PONTO_E_VIGULA || token.atr.CodigoSn==VIRGULA)) {
+			while (token.cat!= SN || token.atr.CodigoSn!=PONTO_E_VIGULA) {
+				if(token.atr.CodigoSn==VIRGULA && token.cat==SN) token=analex(fp);
 				else{
-				 printf("ERRO, , Esperado!na linha %d",linhas);
-				 erro();
+				 printf("ERRO, , Esperado!na linha %d",contLinha);
+				 erro(fp);
 				}
-				if(token.tipo==ID) token=analex();
+				if(token.cat==ID) token=analex(fp);
 				else {
-					printf("ERRO, ID Esperado!na linha %d",linhas);
-	   	         	erro();
+					printf("ERRO, ID Esperado!na linha %d",contLinha);
+	   	         	erro(fp);
 				}
 			}
-			if(token.CodSn==pontovirgula && token.tipo==SN) token=analex();
+			if(token.atr.CodigoSn==PONTO_E_VIGULA && token.cat==SN) token=analex(fp);
 			else {
-				printf("ERRO, ; Esperado!na linha %d",linhas);
-	   	        erro();
+				printf("ERRO, ; Esperado!na linha %d",contLinha);
+	   	        erro(fp);
 			}
 		}
 
 		else {
-			printf("ERRO, prog tipo invalido linha %d",linhas);
-			erro();
+			printf("ERRO, prog tipo invalido linha %d",contLinha);
+			erro(fp);
 		}
 
 
 	}
 
+	else if (token.cat==CMT) {
+		 token=analex(fp);
+	}
+
 	//PRECISA? CASO NAO SEJA NENHUM DOS 3
 	else {
-		printf("ERRO, prog fora invalido linha %d",linhas);
-		erro();
+		printf("ERRO, prog fora invalido linha %d",contLinha);
+		erro(fp);
 		}
 
 }
 
-/*	 			while(eh_Tipo()){
-
-	 				  token=analex();
-					  decl_Var();
-					  while((token.CodSn==virgula)&&(token.tipo==SN)){
-					  							  token=analex();
-												  decl_Var();
-												  }
-					  if((token.CodSn==pontovirgula)&&(token.tipo==SN))
-					  							   token=analex();
-					  else {
-					  	    printf("ERRO, ; Esperado!");
-	 		   				system("PAUSE");
-	 		  				 exit(1);
-			 				  }
-
-					 }
-				 while(token.CodSn!=fechachave) cmd();
-				 token=analex();
-
-*/
-
 	// ############################ CMD ############################3
 
-void cmd(){
+void cmd(FILE* fp){
 
 	//SE
-	if((token.CodPr==se)&&(token.tipo==PR)){
-				token=analex();
-				if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-					token=analex();
-					expr();
-		 		 	if((token.CodSn==fechaparenteses)&&(token.tipo==SN)){
-			 				token=analex();
-							cmd();
+	if((token.atr.CodigoPr==SE)&&(token.cat==PR)){
+				token=analex(fp);
+				if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+					token=analex(fp);
+					expr(fp);
+		 		 	if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)){
+			 				token=analex(fp);
+							cmd(fp);
 
-	   						if((token.CodPr==senao)&&(token.tipo==PR)){
-								token=analex();
-								cmd();
+	   						if((token.atr.CodigoPr==SENAO)&&(token.cat==PR)){
+								token=analex(fp);
+								cmd(fp);
 							}
 					}
 				 	else{
 					    printf("ERRO, ) Esperado!");
-   				        erro();
+   				        erro(fp);
 		        	}
                 }
 				else{
 					 printf("ERRO, (  Esperado!");
-	   				 erro();
+	   				 erro(fp);
 			  	}
   	}
 
   	//ENQUANTO
-  	else if((token.CodPr==enquanto)&&(token.tipo==PR)){
+  	else if((token.atr.CodigoPr==ENQUANTO)&&(token.cat==PR)){
 
-       token=analex();
-       if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-     		token=analex();
- 	 		expr();
+       token=analex(fp);
+       if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+     		token=analex(fp);
+ 	 		expr(fp);
 
- 			if((token.CodSn==fechaparenteses)&&(token.tipo==SN)){
- 				token=analex();
-				cmd();
+ 			if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)){
+ 				token=analex(fp);
+				cmd(fp);
          	}
         	else{
          	     printf("ERRO, ) Esperado!");
-                 erro();
+                 erro(fp);
             }
      	}
  		else{
 	     	printf("ERRO, (  Esperado!");
-		    erro();
+		    erro(fp);
     	}
   	}
 
 	//PARA
-	else if((token.CodPr==para)&&(token.tipo==PR)){
-           token=analex();
-			   if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-		   				token=analex();
-						if(token.tipo!= SN || token.CodSn!=pontovirgula) atrib();
-						if((token.CodSn==pontovirgula)&&(token.tipo==SN)) token=analex();
+	else if((token.atr.CodigoPr==PARA)&&(token.cat==PR)){
+           token=analex(fp);
+			   if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+		   				token=analex(fp);
+						if(token.cat!= SN || token.atr.CodigoSn!=PONTO_E_VIGULA) atrib(fp);
+						if((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN)) token=analex(fp);
 						else{
          	                printf("ERRO, ; Esperado!");
-                            erro();
+                            erro(fp);
 	                    }
 
 						// PODE VIR UM TERMO AQUI, POIS O SINAL NÃO É OBRIGATORIO
-						if(!((token.CodSn==pontovirgula)&&(token.tipo==SN))) expr();
+						if(!((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN))) expr(fp);
 
-						if((token.CodSn==pontovirgula)&&(token.tipo==SN))token=analex();
+						if((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN))token=analex(fp);
 						else{
-							 printf("ERRO, ; Esperado! na linha %d ",linhas);
-                             erro();
+							 printf("ERRO, ; Esperado! na linha %d ",contLinha);
+                             erro(fp);
 	                    }
-						if(!((token.CodSn==fechaparenteses)&&(token.tipo==SN))) atrib();
-						if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
+						if(!((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN))) atrib(fp);
+						if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 						else{
 							printf("ERRO, ) Esperado!");
-                            erro();
+                            erro(fp);
                         }
-						cmd();
+						cmd(fp);
 						}
 			else{
 		 	  printf("ERRO, ( Esperado!");
-              erro();
+              erro(fp);
             }
 	}
 
 
 	//RETORNE
-	else if((token.CodPr==retorne)&&(token.tipo==PR))  {
+	else if((token.atr.CodigoPr==RETORNE)&&(token.cat==PR))  {
 
-	   	token=analex();
-		if(!((token.CodSn==pontovirgula)&&(token.tipo==SN))) expr();
-		if((token.CodSn==pontovirgula)&&(token.tipo==SN))token=analex();
+	   	token=analex(fp);
+		if(!((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN))) expr(fp);
+		if((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN))token=analex(fp);
 		else{
-	 	printf("ERRO, ; Esperado! linha %d",linhas);
-            erro();
+	 	printf("ERRO, ; Esperado! linha %d",contLinha);
+            erro(fp);
         }
 	}
 
 	//ID
-	else if(token.tipo==ID){
+	else if(token.cat==ID){
 
-		token=analex();
-		if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-		  	token=analex();
-			if(!((token.tipo==SN)&&(token.CodSn==fechaparenteses))){
-  				expr();
-				while((token.CodSn==virgula)&&(token.tipo==SN)){
-					token=analex();
-					expr();
+		token=analex(fp);
+		if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+		  	token=analex(fp);
+			if(!((token.cat==SN)&&(token.atr.CodigoSn==FECHA_PARENTESE))){
+  				expr(fp);
+				while((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)){
+					token=analex(fp);
+					expr(fp);
 				}
 	  		}
-	  		token=analex();
-			if((token.CodSn==pontovirgula)&&(token.tipo==SN)){ token=analex(); }
+	  		token=analex(fp);
+			if((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN)){ token=analex(fp); }
 	  		else{
-				printf("ERRO, ;  Esperado!na linha %d",linhas);
-           		erro();
+				printf("ERRO, ;  Esperado!na linha %d",contLinha);
+           		erro(fp);
      		}
 		}
-		else if (token.CodSn==igual && token.tipo==SN) {
-			token=analex();
-			expr();
-			if(token.CodSn==pontovirgula && token.tipo==SN) token=analex();
+		else if (token.atr.CodigoSn==ATRIBUI && token.cat==SN) {
+			token=analex(fp);
+			expr(fp);
+			if(token.atr.CodigoSn==PONTO_E_VIGULA && token.cat==SN) token=analex(fp);
 	  		else{
-				printf("ERRO, ;  Esperado!na linha %d",linhas);
-           		erro();
+				printf("ERRO, ;  Esperado!na linha %d",contLinha);
+           		erro(fp);
      		}
 		}
 	 	else{
-	 	  printf("ERRO, ( Esperado!na linha %d",linhas);
-          erro();
+	 	  printf("ERRO, ( Esperado!na linha %d",contLinha);
+          erro(fp);
       	}
  	}
 
 	// {CMD}
-	else if((token.CodSn==abrechave)&&(token.tipo==SN)){
-		token=analex();
-		while(!((token.CodSn==fechachave)&&(token.tipo==SN))) cmd();
-		if((token.CodSn==fechachave)&&(token.tipo==SN)) token=analex();
+	else if((token.atr.CodigoSn==ABRE_CHAVE)&&(token.cat==SN)){
+		token=analex(fp);
+		while(!((token.atr.CodigoSn==FECHA_CHAVE)&&(token.cat==SN))) cmd(fp);
+		if((token.atr.CodigoSn==FECHA_CHAVE)&&(token.cat==SN)) token=analex(fp);
 		else{
-			printf("ERRO, } Esperado! na linha %d",linhas);
-            erro();
+			printf("ERRO, } Esperado! na linha %d",contLinha);
+            erro(fp);
         }
 	}
 
-    else if((token.CodSn==pontovirgula)&&(token.tipo==SN)) token=analex();
+    else if((token.atr.CodigoSn==PONTO_E_VIGULA)&&(token.cat==SN)) token=analex(fp);
 
   	else {
-  		printf("ERRO, Comando Esperado!na linha %d",linhas);
-    	erro();
+  		printf("ERRO, Comando Esperado!na linha %d",contLinha);
+    	erro(fp);
     }
 
 }
@@ -565,23 +546,23 @@ void cmd(){
 
 
 
-void atrib(){
-	 if(token.tipo==ID){
-	 			token=analex();
-				if((token.CodSn==igual)&&(token.tipo==SN)){
-							token=analex();
-							expr();
+void atrib(FILE* fp){
+	 if(token.cat==ID){
+	 			token=analex(fp);
+				if((token.atr.CodigoSn==ATRIBUI)&&(token.cat==SN)){
+							token=analex(fp);
+							expr(fp);
 				 }
 				else
 				{
-				  printf("ERRO, = Esperado!na linha %d",linhas);
+				  printf("ERRO, = Esperado!na linha %d",contLinha);
 	 		   	  system("PAUSE");
 	 		  	  exit(1);
 			 	 }
 				 }
 				 else
 				 {
-				  printf("ERRO, ID Esperado!na linha %d",linhas);
+				  printf("ERRO, ID Esperado!na linha %d",contLinha);
 	 		   	  system("PAUSE");
 	 		  	  exit(1);
 			 	 }
@@ -589,22 +570,22 @@ void atrib(){
 
 // ################################### EXPR ###############################3
 
-void expr(){
-           expr_Simp();
-           if(op_Rel()) expr_Simp();
+void expr(FILE* fp){
+           exSimp(fp);
+           if(op_Rel(fp)) exSimp(fp);
 
 		   }
 
-// ############################ EXPR_SIMP ################################
+// ############################ EXSIMP ################################
 
-void expr_Simp(){
-	//ESSA CONDICAO E OPCIONAL, VERIFIQUE O USO DE UM ELSE CHAMANDO TERMO()
-	 if((token.CodSn==soma||token.CodSn==subtrai)&&(token.tipo==SN)) token=analex();
-	 termo();
+void exSimp(FILE* fp){
+	//ESSA CONDICAO E OPCIONAL, VERIFIQUE O USO DE UM ELSE CHAMANDO TERMO(fp)
+	 if((token.atr.CodigoSn==SOMA||token.atr.CodigoSn==SUBTRAI)&&(token.cat==SN)) token=analex(fp);
+	 termo(fp);
 	 //AQUI JA É UMA OCORRENCIA OBRIGATORIA DE UM DOS 3
-	 while(((token.CodSn==soma)||(token.CodSn==subtrai)||(token.CodSn==alternativa))&&(token.tipo==SN)){
-	 							token=analex();
-								termo();
+	 while(((token.atr.CodigoSn==SOMA)||(token.atr.CodigoSn==SUBTRAI)||(token.atr.CodigoSn==OU_LOGICO))&&(token.cat==SN)){
+	 							token=analex(fp);
+								termo(fp);
 								}
 }
 
@@ -612,59 +593,59 @@ void expr_Simp(){
 // ############################# TERMO ####################################
 
 
-void termo(){
-	   fator();
-	   while(((token.CodSn==multiplica)||(token.CodSn==divisao)||(token.CodSn==ecomercs))&&(token.tipo==SN)){
+void termo(FILE* fp){
+	   fator(fp);
+	   while(((token.atr.CodigoSn==MULTIPLICA)||(token.atr.CodigoSn==DIVIDE)||(token.atr.CodigoSn==E_LOGICO))&&(token.cat==SN)){
 
-	   										token=analex();
-											fator();
+	   										token=analex(fp);
+											fator(fp);
 											}
 }
 
 // ############################ FATOR ############################
 
-void fator(){
+void fator(FILE* fp){
 
-	 if((token.tipo==CTI)|| (token.tipo==CTR)|| (token.tipo==CTC)) {
-	    token=analex();
+	 if((token.cat==CTI)|| (token.cat==CTR)|| (token.cat==CTC)|| (token.cat==CTL)) {
+	    token=analex(fp);
 	}
-	else if((token.CodSn==not)&&(token.tipo==SN)){
-		token=analex();
-		fator();
+	else if((token.atr.CodigoSn==NEGA)&&(token.cat==SN)){
+		token=analex(fp);
+		fator(fp);
 	}
 
-	else if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-		token=analex();
-		expr();
-		if(!((token.CodSn==fechaparenteses)&&(token.tipo==SN))){
-			printf("ERRO, )  Esperado!na linha %d",linhas);
-	 		erro();
+	else if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+		token=analex(fp);
+		expr(fp);
+		if(!((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN))){
+			printf("ERRO, )  Esperado!na linha %d",contLinha);
+	 		erro(fp);
 		}
-		token=analex();
+		token=analex(fp);
 	}
 
-	else if(token.tipo==ID){
-		token=analex();
-		if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-			token=analex();
-			if( token.CodSn!=fechaparenteses){
-		 	   	expr();
-				while((token.CodSn==virgula)&&(token.tipo==SN)){
-					token=analex();
-					expr();
+	else if(token.cat==ID){
+		token=analex(fp);
+		if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+			token=analex(fp);
+			if( token.atr.CodigoSn!=FECHA_PARENTESE){
+		 	   	expr(fp);
+				while((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)){
+					token=analex(fp);
+					expr(fp);
 				}
 			}
-			if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
+			if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 			else{
-				printf("ERRO, ) Esperado! na linha %d",linhas);
-	            erro();
+				printf("ERRO, ) Esperado! na linha %d",contLinha);
+	            erro(fp);
 	        }
 		}
 	}
 
 	else{
-   		printf("ERRO, fator Esperado!na linha %d",linhas);
-        erro();
+   		printf("ERRO, fator Esperado!na linha %d",contLinha);
+        erro(fp);
 	}
 
  }
@@ -672,11 +653,11 @@ void fator(){
  //################################## OP_ REL ###################################
 
 
- int op_Rel(){
+ int op_Rel(FILE* fp){
 
-	  if(token.tipo==SN){
-		 if( token.CodSn==igualigual || token.CodSn==notigual || token.CodSn==menorque || token.CodSn==menorigual || token.CodSn==maiorque || token.CodSn==maiorigual ){
-           token=analex();
+	  if(token.cat==SN){
+		 if( token.atr.CodigoSn==IGUALA || token.atr.CodigoSn==DIFERENTE || token.atr.CodigoSn==MENOR_QUE || token.atr.CodigoSn==MENOR_OU_IGUAL || token.atr.CodigoSn==MAIOR_QUE || token.atr.CodigoSn==MAIOR_OU_IGUAL ){
+           token=analex(fp);
            return 1;
 		   }
 		   }
@@ -686,173 +667,32 @@ void fator(){
 }
 
 
-
-
-// ######################### PROG ####################################
-
-/*
-
-
-void prog(){
-
-	 token=analex();
-
-	 while( (( token.CodPr==semretorno)&&(token.tipo==PR)) || (eh_Tipo()) ){
-
-      if(eh_Tipo())
-	 {		   token=analex();
-
-	 		   if (token.tipo==ID){
-			   	  			token=analex();
-							if((token.CodSn==virgula)&&(token.tipo==SN)){
-													 while((token.CodSn==virgula)&&(token.tipo==SN)){
-
-													 				token=analex();
-
-																	 decl_Var();
-
-													 }
-	 												 if((token.CodSn==pontovirgula)&&(token.tipo==SN)) token=analex();
-	 												 else{
-													 	  printf("ERRO, ; Esperado!na linha %d",linhas);
-	 		   	                						  system("PAUSE");
-	 		  	                						  exit(1);
-							  							  }
-					        }
-					        else
-					            if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-
-												token=analex();
-												tipos_Param();
-
-												if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
-												else{
-												    printf("ERRO, ) Esperado!na linha %d",linhas);
-	 		   	                						  system("PAUSE");
-	 		  	                						  exit(1);
-							  						 }
-												if((token.CodSn==abrechave)&&(token.tipo==SN)){
-
-																		   token=analex();
-
-																		   func();
-																		   }
-																		   else{
-									   									   		decl();
-									   											if((token.CodSn==pontovirgula)&&(token.tipo==SN)) token=analex();
-									   												else{
-																						 printf("ERRO, ; Esperado!na linha %d",linhas);
-	 		   	                														 system("PAUSE");
-	 		  	                					 									 exit(1);
-							  						 									 }
-																						 }
-
-
-									   }
-									   else{
-
-									   		if((token.CodSn==pontovirgula)&&(token.tipo==SN)) token=analex();
-									   		else{
-
-												    printf("ERRO, ; ou ( Esperado!na linha %d",linhas);
-	 		   	                					system("PAUSE");
-	 		  	                					 exit(1);
-							  						 }
-
-													 }
-						 }else{
-						 	   printf("ERRO, ID Esperado!na linha %d",linhas);
-	 		   	               system("PAUSE");
-	 		  	               exit(1);
-							  						 }
-
-
-													 }else{
-
-
-
-
-				 token=analex();
-
-	 		   if (token.tipo==ID){
-			   	  			token=analex();
-
-
-					            if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-
-												token=analex();
-												tipos_Param();
-
-												if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
-												else{
-												    printf("ERRO, ) Esperado!na linha %d",linhas);
-	 		   	                						  system("PAUSE");
-	 		  	                						  exit(1);
-							  						 }
-												if((token.CodSn==abrechave)&&(token.tipo==SN)){
-
-																		   token=analex();
-
-																		   func();
-																		   }
-																		   else{
-									   									   		decl();
-									   											if((token.CodSn==pontovirgula)&&(token.tipo==SN)) token=analex();
-									   												else{
-																						 printf("ERRO, ; Esperado!na linha %d",linhas);
-	 		   	                														 system("PAUSE");
-	 		  	                					 									 exit(1);
-							  						 									 }
-																						 }
-
-
-									   }
-									   else{
-												    printf("ERRO,   Tipo Esperado na linha %d ",linhas);
-	 		   	                					system("PAUSE");
-	 		  	                					 exit(1);
-
-
-													 }
-						 }else{
-						 	   printf("ERRO, ID Esperado!na linha %d",linhas);
-	 		   	               system("PAUSE");
-	 		  	               exit(1);
-							  						 }
-													 }
-	 }
-
-
-}
-*/
-
-
 // #################### DECL #######################
 
-void decl(){
+void decl(FILE* fp){
 
-	 while((token.CodSn==virgula)&&(token.tipo==SN)){
-	 			token=analex();
-				if(token.tipo==ID){
-						token=analex();
-						if((token.CodSn==abreparenteses)&&(token.tipo==SN)){
-										token=analex();
-										tipos_Param();
-										if((token.CodSn==fechaparenteses)&&(token.tipo==SN)) token=analex();
+	 while((token.atr.CodigoSn==VIRGULA)&&(token.cat==SN)){
+	 			token=analex(fp);
+				if(token.cat==ID){
+						token=analex(fp);
+						if((token.atr.CodigoSn==ABRE_PARENTESE)&&(token.cat==SN)){
+										token=analex(fp);
+										tipos_Param(fp);
+										if((token.atr.CodigoSn==FECHA_PARENTESE)&&(token.cat==SN)) token=analex(fp);
 										else{
-											  printf("ERRO, ) Esperado!na linha %d",linhas);
+											  printf("ERRO, ) Esperado!na linha %d",contLinha);
 	 		   	                			  system("PAUSE");
 	 		  	                			  exit(1);
 							  				}
 						}
 						else
-						{ printf("ERRO, ( Esperado!na linha %d",linhas);
+						{ printf("ERRO, ( Esperado!na linha %d",contLinha);
 	 		   	          system("PAUSE");
 	 		  	          exit(1);
 						}
 				}
 				else
-				        {printf("ERRO, ID Esperado!na linha %d",linhas);
+				        {printf("ERRO, ID Esperado!na linha %d",contLinha);
 	 		   	         system("PAUSE");
 	 		  	         exit(1);
 						}

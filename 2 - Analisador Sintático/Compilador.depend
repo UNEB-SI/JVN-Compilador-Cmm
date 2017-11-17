@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1446667744 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1508104954 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\compilador\analex.c
+
+1508098614 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1508448571 source:d:\users\clb161675\downloads\trabalho\1 - analisador léxico\compilador\analex.c
+	"Analex.h"
+
+1508446337 d:\users\clb161675\downloads\trabalho\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1508445685 source:d:\users\clb161675\downloads\trabalho\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Analex.h"
+
+1508687756 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Analex.h"
+
+1509412274 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1509417736 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\analex.c
+	"Analex.h"
+
+1509417736 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\analex.c
+	"Analex.h"
+
+1510885687 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1510885809 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\anasint.c
+	"Analex.h"
+
+1510461949 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\anasint.h
+
+1510885501 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\main.c
+	"Analex.h"
+
