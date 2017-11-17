@@ -54,7 +54,7 @@ typedef enum {  ABRE_PARENTESE,     FECHA_PARENTESE,        ABRE_CHAVE,         
 
 /*######### INICIO PALAVRAS RESERVADAS ##########*/
 //caracter inteiro real booleano semparam semretorno se senao enquanto para retorne
-typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE } PALAVRA_RESERVADA;
+typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE, PROTOTIPO } PALAVRA_RESERVADA;
 /*######### FIM PALAVRAS RESERVADAS ##########*/
 
 /*######### INICIO TOKEN ##########*/
