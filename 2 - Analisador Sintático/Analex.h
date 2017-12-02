@@ -7,14 +7,14 @@
 #define SIZE_PR         12
 #define COMP_PR         15
 
-#define SIZE_CTL        300
-#define COMP_CTL        300
+#define SIZE_CTL        500
+#define COMP_CTL        500
 
 #define SIZE_SN         20
 #define COMP_SN         3
 
 #define COMP_NUM        25
-#define COMP_LEXEMA     100
+#define COMP_LEXEMA     33
 
 #define EOS             '\0' //indica final da string
 #define ARQ             100  //qtd máxima do nome do arquivo
@@ -54,7 +54,7 @@ typedef enum {  ABRE_PARENTESE,     FECHA_PARENTESE,        ABRE_CHAVE,         
 
 /*######### INICIO PALAVRAS RESERVADAS ##########*/
 //caracter inteiro real booleano semparam semretorno se senao enquanto para retorne
-typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE,PROTOTIPO } PALAVRA_RESERVADA;
+typedef enum { CARACTER,INTEIRO,REAL,BOOLEANO,SEMPARAM,SEMRETORNO,SE,SENAO,ENQUANTO,PARA,RETORNE, PROTOTIPO } PALAVRA_RESERVADA;
 /*######### FIM PALAVRAS RESERVADAS ##########*/
 
 /*######### INICIO TOKEN ##########*/
@@ -70,7 +70,7 @@ typedef struct
 {
     CATEGORIA cat;
     char lexema[COMP_LEXEMA];
-    char comentario[2000];
+    char comentario[5000];
 
     union{
         PALAVRA_RESERVADA CodigoPr;
@@ -86,6 +86,7 @@ typedef struct
 //Prototipo das funcoes
 TOKEN token;
 
+/*######### INICIO  ##########*/
 FILE* abreArquivo ();
 TOKEN analex(FILE*);
 int buscaEmTabPr(char []);
