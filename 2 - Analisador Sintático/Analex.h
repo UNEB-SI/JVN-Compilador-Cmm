@@ -14,7 +14,7 @@
 #define COMP_SN         3
 
 #define COMP_NUM        25
-#define COMP_LEXEMA     33
+#define COMP_LEXEMA     100
 
 #define EOS             '\0' //indica final da string
 #define ARQ             100  //qtd máxima do nome do arquivo
