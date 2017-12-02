@@ -39,3 +39,17 @@
 1509417736 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\1 - analisador léxico\1 - analisador léxico\compilador\analex.c
 	"Analex.h"
 
+1512234407 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\1 - analisador léxico\compilador\analex.c
+	"Analex.h"
+
+1512232855 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\1 - analisador léxico\compilador\analex.h
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1508687756 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\1 - analisador léxico\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Analex.h"
+

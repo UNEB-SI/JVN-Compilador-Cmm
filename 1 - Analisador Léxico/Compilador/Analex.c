@@ -158,7 +158,7 @@ TOKEN analex(FILE * fp)
                 else if(c == ')')           estado = 33;
                 else if(c == '*')           estado = 34;
                 else if(c == ',')           estado = 35;
-                else if(c == '│')           estado = 36;
+                else if(c == '|')           estado = 36;
                 else if(c == '&')           estado = 38;
                 else if(c == '=')           estado = 40;
                 else if(c == '!')           estado = 43;
@@ -202,15 +202,12 @@ TOKEN analex(FILE * fp)
 
                 c = fgetc(fp);
                 if (c == '*') {
-                    token.comentario[pos] = c;
-                    pos++;
                     estado = 5;
-                    }
-                else {
-                    token.comentario[pos] = c;
-                    pos++;
+                }
+                else
+                {
                     estado = 4;
-                    }
+                }
 
                 break;
             case 4:
@@ -243,8 +240,6 @@ TOKEN analex(FILE * fp)
                 }
                 else
                 {
-                    token.comentario[pos] = c;
-                    pos++;
                     estado = 4;
                 }
 
@@ -254,7 +249,7 @@ TOKEN analex(FILE * fp)
                 c = fgetc(fp);
 
 
-                if(c == '/')
+                if(c == '\\')
                 {
                     estado = 8;
                 }
@@ -388,6 +383,8 @@ TOKEN analex(FILE * fp)
 
                 break;
             case 17:
+
+                c = fgetc(fp);
 
                 if(isprint(c) && c != '\"' && c != '\n')
                 {
@@ -908,6 +905,7 @@ TOKEN analex(FILE * fp)
 
                 contLinha++;
                 estado = 0;
+                break;
             case 54:
                 excecao("Token invalido",contLinha);
                 token.cat = INV;

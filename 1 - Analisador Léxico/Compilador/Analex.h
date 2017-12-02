@@ -7,8 +7,8 @@
 #define SIZE_PR         12
 #define COMP_PR         15
 
-#define SIZE_CTL        300
-#define COMP_CTL        300
+#define SIZE_CTL        500
+#define COMP_CTL        500
 
 #define SIZE_SN         20
 #define COMP_SN         3
@@ -70,7 +70,7 @@ typedef struct
 {
     CATEGORIA cat;
     char lexema[COMP_LEXEMA];
-    char comentario[500];
+    char comentario[5000];
 
     union{
         PALAVRA_RESERVADA CodigoPr;

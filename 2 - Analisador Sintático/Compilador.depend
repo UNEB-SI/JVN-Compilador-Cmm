@@ -42,14 +42,15 @@
 1509417736 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\analex.c
 	"Analex.h"
 
-1510885687 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\analex.h
+1510886411 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\analex.h
 	<stdio.h>
 	<stdlib.h>
 	<ctype.h>
 	<string.h>
 
-1510885809 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\anasint.c
+1510885831 source:c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\anasint.c
 	"Analex.h"
+	"Anasint.h"
 
 1510461949 c:\users\jean\desktop\uneb\2017.2\compiladores\trabalho\compiladorcmm\2 - analisador sintático\anasint.h
 
