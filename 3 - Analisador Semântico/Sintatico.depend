@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1513145649 source:c:\users\raunis\pictures\sintatico\main.c
+	"Analex.h"
+
+1513170341 c:\users\raunis\pictures\sintatico\analex.h
+	<ctype.h>
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1513128285 source:c:\users\raunis\pictures\sintatico\analex.c
+	"Analex.h"
+
+1513146909 source:c:\users\raunis\pictures\sintatico\sintatico.c
+	"Analex.h"
+
